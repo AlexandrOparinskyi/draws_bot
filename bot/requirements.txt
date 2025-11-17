@@ -1,0 +1,9 @@
+aiogram
+aiogram_dialog
+alembic
+environs
+asyncpg
+flake8
+fluentogram
+redis
+sqlalchemy
