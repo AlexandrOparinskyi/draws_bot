@@ -5,5 +5,7 @@ user-home-text =
 
 
 new-raffle-button = ➕ Создать розыгрыш
+created-raffles-button = Созданные розыгрыши: { $raffle_count }
 active-raffles-button = Активные розыгрыши: { $raffle_count }
 completed-raffles-button = Завершенные розыгрыши: { $raffle_count }
+channels-button = 🧾 Список каналов

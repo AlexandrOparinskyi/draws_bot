@@ -15,5 +15,7 @@ class RaffleState(StatesGroup):
     show_result = State()
 
 
-class RaffleSettingState(StatesGroup):
+class CreatedRaffleState(StatesGroup):
+    list_raffle = State()
     home = State()
+

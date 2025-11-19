@@ -5,7 +5,7 @@ from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Select, Button
 
-from bot.states import RaffleState, RaffleSettingState
+from bot.states import RaffleState
 from bot.utils import create_raffle
 from config import MAX_RAFFLE_TITLE_LENGTH, MAX_RAFFLE_DESCRIPTION_LENGTH
 
@@ -132,5 +132,5 @@ async def raffle_select_ref_system(callback: CallbackQuery,
     raffle_id = await create_raffle(user_id=callback.from_user.id,
                                     **dialog_manager.dialog_data)
 
-    await dialog_manager.start(state=RaffleSettingState.home,
-                               data={"raffle_id": raffle_id})
+    # await dialog_manager.start(state=ActiveRaffleState.home,
+    #                            data={"raffle_id": raffle_id})
