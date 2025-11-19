@@ -1,0 +1,1 @@
+raffle-setting-home-text = Home

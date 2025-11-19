@@ -16,13 +16,13 @@ class TranslatorRunnerMiddleware(BaseMiddleware):
         data: Dict[str, Any]
     ) -> Any:
 
-        user: User = data.get('event_from_user')
-        hub: TranslatorHub = data.get('_translator_hub')
+        user: User = data.get("event_from_user")
+        hub: TranslatorHub = data.get("_translator_hub")
 
         if user is None:
             return await handler(event, data)
 
-        data['i18n'] = hub.get_translator_by_locale(
+        data["i18n"] = hub.get_translator_by_locale(
             locale=user.language_code
         )
 

@@ -5,7 +5,7 @@ from dataclasses import dataclass
 @dataclass
 class TgBot:
     token: str
-    channels: list[str]
+    channels: str
 
 
 @dataclass
@@ -45,7 +45,7 @@ def load_config(path: str | None = None) -> Config:
     return Config(
         tg_bot=TgBot(
             token=env.str("BOT_TOKEN"),
-            channels=[ch for ch in env.str("DEV_URL").split(", ")],
+            channels=env.str("CHANNELS")
         ),
         db=Db(
             host=env.str("DB_HOST", "localhost"),
@@ -65,3 +65,7 @@ def load_config(path: str | None = None) -> Config:
             db=env.int("REDIS_DB", 0),
         )
     )
+
+
+MAX_RAFFLE_TITLE_LENGTH = 50
+MAX_RAFFLE_DESCRIPTION_LENGTH = 1500
