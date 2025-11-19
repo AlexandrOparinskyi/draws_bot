@@ -22,4 +22,5 @@ async def getter_user_home(i18n: TranslatorHub,
             "new_raffle_button": i18n.new.raffle.button(),
             "created_raffles_button": created_raffles_button,
             "active_raffles_button": active_raffles_button,
-            "completed_raffles_button": completed_raffles_button}
+            "completed_raffles_button": completed_raffles_button,
+            "channels_button": i18n.channels.button()}

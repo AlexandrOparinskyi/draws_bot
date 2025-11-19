@@ -12,17 +12,19 @@ def create_translator_hub() -> TranslatorHub:
                 locale='ru',
                 translator=FluentBundle.from_files(
                     locale='ru',
-                    filenames=[f'{DIR_PATH}/ru/user.ftl',
+                    filenames=[f'{DIR_PATH}/ru/general.ftl',
+                               f'{DIR_PATH}/ru/user.ftl',
                                f'{DIR_PATH}/ru/raffle.ftl',
-                               f'{DIR_PATH}/ru/raffles_setting.ftl']),
+                               f'{DIR_PATH}/ru/created_raffles.ftl']),
             ),
             FluentTranslator(
                 locale='en',
                 translator=FluentBundle.from_files(
                     locale='en',
-                    filenames=[f'{DIR_PATH}/en/user.ftl',
+                    filenames=[f'{DIR_PATH}/ru/general.ftl',
+                               f'{DIR_PATH}/en/user.ftl',
                                f'{DIR_PATH}/en/raffle.ftl',
-                               f'{DIR_PATH}/en/raffles_setting.ftl']),
+                               f'{DIR_PATH}/en/created_raffles.ftl']),
             ),
         ],
         root_locale='en',

@@ -1,5 +1,6 @@
 from aiogram import Router
 
+from .created_raffles import register_created_raffles_dialogs
 from .raffles import register_raffle_dialogs
 from .user import register_user_dialogs
 
@@ -7,3 +8,4 @@ from .user import register_user_dialogs
 def register_dialogs(router: Router):
     register_user_dialogs(router)
     register_raffle_dialogs(router)
+    register_created_raffles_dialogs(router)

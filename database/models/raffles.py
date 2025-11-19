@@ -29,8 +29,6 @@ class Raffle(Base):
     )
     title: Mapped[str] = mapped_column(String(100), nullable=False)
     description: Mapped[str] = mapped_column(String(1500), nullable=False)
-    file_path: Mapped[Optional[str]] = mapped_column(String(100),
-                                                     nullable=True)
     end_date: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     winners_count: Mapped[int] = mapped_column(nullable=False)
     ref_system: Mapped[bool] = mapped_column(default=False, nullable=False)

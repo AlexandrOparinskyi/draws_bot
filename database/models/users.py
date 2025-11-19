@@ -4,9 +4,10 @@ from sqlalchemy import BigInteger
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
+from .raffles import RaffleTypeEnum
 
 if TYPE_CHECKING:
-    from .raffles import Raffle, RaffleTypeEnum
+    from .raffles import Raffle
     from .channels import Channel
 
 
@@ -40,4 +41,4 @@ class User(Base):
     @property
     def completed_raffles(self)-> list["Raffle"]:
         return [r for r in self.raffles
-                if not r.raffle_type == RaffleTypeEnum.COMPLETED]
+                if r.raffle_type == RaffleTypeEnum.COMPLETED]

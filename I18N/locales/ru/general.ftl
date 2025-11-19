@@ -1,0 +1,1 @@
+back-button = ◀️ Назад

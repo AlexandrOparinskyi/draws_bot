@@ -16,6 +16,6 @@ class RaffleState(StatesGroup):
 
 
 class CreatedRaffleState(StatesGroup):
-    list_raffle = State()
     home = State()
+    raffle = State()
 
