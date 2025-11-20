@@ -1,4 +1,6 @@
+from aiogram.enums import ContentType
 from aiogram_dialog import Dialog, Window
+from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Group, Select, Button
 from aiogram_dialog.widgets.media import DynamicMedia
 from aiogram_dialog.widgets.text import Format
@@ -9,11 +11,14 @@ from .handlers import (edit_raffle_edit_param,
                        edit_raffle_toggle_ref_system,
                        edit_raffle_back_to_raffle,
                        edit_raffle_back_to_changes,
-                       edit_raffle_select_param)
+                       edit_raffle_select_param,
+                       edit_raffle_enter_param,
+                       edit_raffle_enter_media)
 from bot.states import ChangeRaffleState
+from ..raffles.handlers import raffle_error_format
 
 edit_raffle_dialog = Dialog(
-Window(
+    Window(
         Format("{changes_text}"),
         DynamicMedia("media"),
         Group(Select(text=Format("{item[0]}"),
@@ -33,6 +38,13 @@ Window(
     ),
     Window(
         Format("{changed_text}"),
+        MessageInput(func=edit_raffle_enter_param,
+                     content_types=ContentType.TEXT),
+        MessageInput(func=edit_raffle_enter_media,
+                     content_types=(ContentType.VIDEO,
+                                    ContentType.PHOTO)),
+        MessageInput(func=raffle_error_format,
+                     content_types=ContentType.ANY),
         Group(Select(text=Format("{item[0]}"),
                      id="change_raffle_part",
                      item_id_getter=lambda x: x[1],

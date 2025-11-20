@@ -95,13 +95,12 @@ async def delete_media_at_raffle_by_id(raffle_id: int) -> None:
                          f"with id {raffle_id}: {err}")
 
 
-async def edit_selected_param(param: str, value: str, raffle_id: int) -> None:
+async def edit_selected_param(param: str,
+                              value: str | int | datetime | None,
+                              raffle_id: int) -> None:
     """Update selected param with raffle by id"""
-    if param == "winners_count":
-        value = int(value)
-
-    if param == "end_date":
-        value = datetime.strptime(value, "%d.%m.%Y %H:%M")
+    if value is None:
+        return
 
     updated_data = {param: value}
     async with get_async_session() as session:

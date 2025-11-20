@@ -7,7 +7,7 @@ raffle-title-text =
     • Максимум { $max_symbols } символов
     • Можно использовать эмодзи
 
-raffle-title-error-length-text = ❌ Слишком длинное название! Максимум 100 символов.
+raffle-title-error-length-text = ❌ Слишком длинное название! Максимум { $max_symbols } символов.
 
 raffle-description-text =
     📝 Шаг 2 из 6: Описание розыгрыша
@@ -19,7 +19,7 @@ raffle-description-text =
     • Четкие условия участия
     • Можно использовать эмодзи
 
-raffle-description-error-length-text = ❌ Слишком длинное описание! Максимум 1500 символов.
+raffle-description-error-length-text = ❌ Слишком длинное описание! Максимум { $max_symbols } символов.
 
 raffle-media-text =
     🖼️ Шаг 3 из 6: Добавление медиа
