@@ -103,6 +103,12 @@ async def edit_selected_param(param: str,
         return
 
     updated_data = {param: value}
+
+    if param == "video_id":
+        updated_data.update(photo_id=None)
+    if param == "photo_id":
+        updated_data.update(video_id=None)
+
     async with get_async_session() as session:
         try:
             await session.execute(update(Raffle).where(

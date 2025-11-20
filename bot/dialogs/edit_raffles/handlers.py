@@ -127,15 +127,10 @@ async def edit_raffle_enter_media(message: Message,
                                   widget: MessageInput,
                                   dialog_manager: DialogManager):
     raffle_id = int(dialog_manager.dialog_data.get("raffle_id"))
-    i18n = dialog_manager.middleware_data.get("i18n")
     param = None
     value = None
 
     if message.photo:
-        if len(message.photo) > 1:
-            await message.answer(
-                text=i18n.raffle.media.too.many.files.text()
-            )
         param = "photo_id"
         value = message.photo[0].file_id
     elif message.video:
