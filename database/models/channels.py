@@ -35,6 +35,11 @@ class Channel(Base):
         secondary="raffle_channels",
         back_populates="channels"
     )
+    raffle_channels: Mapped[list["RaffleChannel"]] = relationship(
+        "RaffleChannel",
+        back_populates="channel",
+        lazy="selectin"
+    )
 
 
 class RaffleChannel(Base):
@@ -45,3 +50,16 @@ class RaffleChannel(Base):
     raffle_id: Mapped[int] = mapped_column(ForeignKey("raffles.id"),
                                            nullable=False)
     is_active: Mapped[bool] = mapped_column(nullable=False, default=True)
+    channel_type: Mapped[ChannelTypeEnum] = mapped_column(
+        Enum(ChannelTypeEnum),
+        nullable=False
+    )
+
+    raffle: Mapped["Raffle"] = relationship(
+        "Raffle",
+        back_populates="raffle_channels"
+    )
+    channel: Mapped["Channel"] = relationship(
+        "Channel",
+        back_populates="raffle_channels"
+    )

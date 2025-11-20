@@ -18,4 +18,6 @@ class RaffleState(StatesGroup):
 class CreatedRaffleState(StatesGroup):
     home = State()
     raffle = State()
+    confirm_delete = State()
+    preview = State()
 

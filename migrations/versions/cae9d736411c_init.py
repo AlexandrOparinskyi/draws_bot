@@ -1,8 +1,8 @@
 """init
 
-Revision ID: e865c3a867e1
+Revision ID: cae9d736411c
 Revises: 
-Create Date: 2025-11-19 14:56:59.165709
+Create Date: 2025-11-20 12:08:34.625609
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'e865c3a867e1'
+revision: str = 'cae9d736411c'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -44,7 +44,6 @@ def upgrade() -> None:
     sa.Column('user_id', sa.BigInteger(), nullable=False),
     sa.Column('title', sa.String(length=100), nullable=False),
     sa.Column('description', sa.String(length=1500), nullable=False),
-    sa.Column('file_path', sa.String(length=100), nullable=True),
     sa.Column('end_date', sa.DateTime(), nullable=False),
     sa.Column('winners_count', sa.Integer(), nullable=False),
     sa.Column('ref_system', sa.Boolean(), nullable=False),
@@ -60,6 +59,7 @@ def upgrade() -> None:
     sa.Column('channel_id', sa.Integer(), nullable=False),
     sa.Column('raffle_id', sa.Integer(), nullable=False),
     sa.Column('is_active', sa.Boolean(), nullable=False),
+    sa.Column('channel_type', sa.Enum('SUBSCRIBE', 'POST', name='channeltypeenum'), nullable=False),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['channel_id'], ['channels.id'], ),
