@@ -1,9 +1,11 @@
+from typing import Any
+
 from aiogram.types import CallbackQuery
 from aiogram_dialog import DialogManager, StartMode
-from aiogram_dialog.widgets.kbd import Button, Select
+from aiogram_dialog.widgets.kbd import Button, Select, ManagedCheckbox
 
-from bot.states import UserState, CreatedRaffleState
-from bot.utils import delete_raffle_by_id
+from bot.states import UserState, CreatedRaffleState, ChangeRaffleState
+from bot.utils import delete_raffle_by_id, toggle_ref_system
 
 
 async def created_raffle_back_to_start(callback: CallbackQuery,
@@ -68,3 +70,10 @@ async def created_raffle_preview_link(callback: CallbackQuery,
         text=i18n.created.raffle.preview.link(),
         show_alert=True
     )
+
+
+async def created_raffle_changes(callback: CallbackQuery,
+                                 button: Button,
+                                 dialog_manager: DialogManager) -> None:
+    await dialog_manager.start(state=ChangeRaffleState.changes,
+                               data=dialog_manager.dialog_data)

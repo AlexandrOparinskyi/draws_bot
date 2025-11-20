@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from aiogram.enums import ContentType
 from aiogram.types import User
 from aiogram_dialog import DialogManager
@@ -5,6 +7,7 @@ from aiogram_dialog.api.entities import MediaAttachment
 from fluentogram import TranslatorHub
 
 from bot.utils import get_user_by_id, get_raffle_by_id
+from config import MAX_RAFFLE_TITLE_LENGTH, MAX_RAFFLE_DESCRIPTION_LENGTH
 
 
 async def getter_created_raffle_home(i18n: TranslatorHub,
@@ -55,7 +58,7 @@ async def getter_create_raffle_confirm_delete(i18n: TranslatorHub,
 
 async def getter_created_raffle_preview(i18n: TranslatorHub,
                                         dialog_manager: DialogManager,
-                                        **kwargs) -> dict[str, str]:
+                                        **kwargs) -> dict[str, str | None]:
     raffle_id = int(dialog_manager.dialog_data.get("raffle_id"))
     raffle = await get_raffle_by_id(raffle_id)
     date = raffle.end_date.strftime("%d.%m.%Y")

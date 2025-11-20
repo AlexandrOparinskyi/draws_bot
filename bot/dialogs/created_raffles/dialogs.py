@@ -15,7 +15,8 @@ from .handlers import (created_raffle_back_to_start,
                        created_raffle_delete_yes,
                        created_raffle_delete_raffle,
                        created_raffle_preview,
-                       created_raffle_preview_link)
+                       created_raffle_preview_link,
+                       created_raffle_changes)
 
 created_raffles_dialog = Dialog(
     Window(
@@ -36,7 +37,7 @@ created_raffles_dialog = Dialog(
         Format("{raffle_text}"),
         Row(Button(text=Format("{edit_button}"),
                    id="edit_button",
-                   on_click=None),
+                   on_click=created_raffle_changes),
             Button(text=Format("{preview_button}"),
                    id="preview_button",
                    on_click=created_raffle_preview)),

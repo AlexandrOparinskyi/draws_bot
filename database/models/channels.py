@@ -30,11 +30,11 @@ class Channel(Base):
         "User",
         back_populates="channels"
     )
-    raffles: Mapped[list["Raffle"]] = relationship(
-        "Raffle",
-        secondary="raffle_channels",
-        back_populates="channels"
-    )
+    # raffles: Mapped[list["Raffle"]] = relationship(
+    #     "Raffle",
+    #     secondary="raffle_channels",
+    #     back_populates="channels"
+    # )
     raffle_channels: Mapped[list["RaffleChannel"]] = relationship(
         "RaffleChannel",
         back_populates="channel",

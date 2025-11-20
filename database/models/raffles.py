@@ -41,15 +41,15 @@ class Raffle(Base):
     video_id: Mapped[str] = mapped_column(String(100), nullable=True)
 
     user: Mapped["User"] = relationship("User", back_populates="raffles")
-    channels: Mapped[list["Channel"]] = relationship(
-        "Channel",
-        secondary="raffle_channels",
-        back_populates="raffles"
-    )
+    # channels: Mapped[list["Channel"]] = relationship(
+    #     "Channel",
+    #     secondary="raffle_channels",
+    #     back_populates="raffles"
+    # )
     raffle_channels: Mapped[list["RaffleChannel"]] = relationship(
         "RaffleChannel",
         back_populates="raffle",
-        lazy="selectin"
+        lazy="selectin",
     )
 
     @property

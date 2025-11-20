@@ -21,3 +21,7 @@ class CreatedRaffleState(StatesGroup):
     confirm_delete = State()
     preview = State()
 
+
+class ChangeRaffleState(StatesGroup):
+    changes = State()
+    change_param = State()

@@ -2,7 +2,7 @@ import logging
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import insert, select, delete
+from sqlalchemy import insert, select, delete, update
 from sqlalchemy.exc import SQLAlchemyError
 
 from database import get_async_session, Raffle
@@ -61,3 +61,57 @@ async def delete_raffle_by_id(raffle_id: int) -> None:
         except SQLAlchemyError as err:
             logger.error(f"Database error delete raffle with id {raffle_id}: "
                          f"{err}")
+
+
+async def toggle_ref_system(raffle_id: int) -> Optional[Raffle]:
+    """Change referral system for another"""
+    async with get_async_session() as session:
+        try:
+            raffle = await session.scalar(select(Raffle).where(
+                Raffle.id == raffle_id
+            ))
+            if raffle:
+                raffle.ref_system = not raffle.ref_system
+                await session.commit()
+            return raffle
+        except SQLAlchemyError as err:
+            logger.error(f"Database error toggle raffle referral system "
+                         f"with id {raffle_id}: {err}")
+
+
+async def delete_media_at_raffle_by_id(raffle_id: int) -> None:
+    """Delete all media at raffle by id"""
+    async with get_async_session() as session:
+        try:
+            await session.execute(update(Raffle).where(
+                Raffle.id == raffle_id
+            ).values(
+                photo_id=None,
+                video_id=None
+            ))
+            await session.commit()
+        except SQLAlchemyError as err:
+            logger.error(f"Database error delete media at raffle "
+                         f"with id {raffle_id}: {err}")
+
+
+async def edit_selected_param(param: str, value: str, raffle_id: int) -> None:
+    """Update selected param with raffle by id"""
+    if param == "winners_count":
+        value = int(value)
+
+    if param == "end_date":
+        value = datetime.strptime(value, "%d.%m.%Y %H:%M")
+
+    updated_data = {param: value}
+    async with get_async_session() as session:
+        try:
+            await session.execute(update(Raffle).where(
+                Raffle.id == raffle_id
+            ).values(
+                **updated_data
+            ))
+            await session.commit()
+        except SQLAlchemyError as err:
+            logger.error(f"Database error update raffle param = {param} "
+                         f"with id {raffle_id}: {err}")
