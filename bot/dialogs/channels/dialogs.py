@@ -1,5 +1,5 @@
 from aiogram_dialog import Dialog, Window
-from aiogram_dialog.widgets.kbd import Button
+from aiogram_dialog.widgets.kbd import Button, Group, Select
 from aiogram_dialog.widgets.text import Format
 
 from .getters import (getter_channel_home,
@@ -15,6 +15,11 @@ channel_dialog = Dialog(
         Button(text=Format("{add_channel_button}"),
                id="add_channel_button",
                on_click=channel_instruction),
+        Group(Select(text=Format("{item.title}"),
+                     id="select_channel",
+                     item_id_getter=lambda x: x.chat_id,
+                     items="channel_buttons"),
+              width=1),
         Button(text=Format("{back_button}"),
                id="back_button_to_home_menu",
                on_click=channel_back_to_home_menu),
