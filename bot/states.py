@@ -29,3 +29,4 @@ class ChangeRaffleState(StatesGroup):
 
 class ChannelState(StatesGroup):
     home = State()
+    instruction = State()

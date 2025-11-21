@@ -1,6 +1,6 @@
 import enum
 from typing import TYPE_CHECKING
-from sqlalchemy import String, ForeignKey, Enum
+from sqlalchemy import String, ForeignKey, Enum, BigInteger
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 
 from .base import Base
@@ -10,33 +10,42 @@ if TYPE_CHECKING:
     from .raffles import Raffle
 
 
-class ChannelTypeEnum(enum.Enum):
+class RaffleChannelTypeEnum(enum.Enum):
     SUBSCRIBE = "SUBSCRIBE"
     POST = "POST"
+
+
+class ChatTypeEnum(enum.Enum):
+    CHANNEL = "Channel"
+    GROUP = "Group"
+    SUPERGROUP = "Supergroup"
 
 
 class Channel(Base):
     __tablename__ = "channels"
 
-    url: Mapped[str] = mapped_column(String(200), nullable=False)
-    title: Mapped[str] = mapped_column(String(500), nullable=False)
+    title: Mapped[str] = mapped_column(String(500), nullable=True)
+    username: Mapped[str] = mapped_column(String(500),
+                                          nullable=True,
+                                          unique=True)
+    chat_id: Mapped[int] = mapped_column(BigInteger,
+                                         nullable=False,
+                                         unique=True)
+    type: Mapped[ChatTypeEnum] = mapped_column(Enum(ChatTypeEnum),
+                                              nullable=False)
     user_id: Mapped[int] = mapped_column(
         ForeignKey("users.id",
                    ondelete="cascade"),
         nullable=False
     )
+    can_post: Mapped[bool] = mapped_column(default=True, nullable=False)
+    can_edit: Mapped[bool] = mapped_column(default=True, nullable=False)
 
     user: Mapped["User"] = relationship(
         "User",
         back_populates="channels",
         lazy="joined"
     )
-    # raffles: Mapped[list["Raffle"]] = relationship(
-    #     "Raffle",
-    #     secondary="raffle_channels",
-    #     back_populates="channels"
-    #
-    # )
     raffle_channels: Mapped[list["RaffleChannel"]] = relationship(
         "RaffleChannel",
         back_populates="channel",
@@ -52,8 +61,8 @@ class RaffleChannel(Base):
     raffle_id: Mapped[int] = mapped_column(ForeignKey("raffles.id"),
                                            nullable=False)
     is_active: Mapped[bool] = mapped_column(nullable=False, default=True)
-    channel_type: Mapped[ChannelTypeEnum] = mapped_column(
-        Enum(ChannelTypeEnum),
+    channel_type: Mapped[RaffleChannelTypeEnum] = mapped_column(
+        Enum(RaffleChannelTypeEnum),
         nullable=False
     )
 

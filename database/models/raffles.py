@@ -6,7 +6,7 @@ from sqlalchemy import String, DateTime, ForeignKey, Enum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
-from .channels import ChannelTypeEnum
+from .channels import RaffleChannelTypeEnum
 
 if TYPE_CHECKING:
     from .users import User
@@ -58,10 +58,10 @@ class Raffle(Base):
     def get_public_channels(self) -> list["RaffleChannel"]:
         return [ch for ch in self.raffle_channels
                 if ch.is_active and
-                ch.channel_type == ChannelTypeEnum.POST]
+                ch.channel_type == RaffleChannelTypeEnum.POST]
 
     @property
     def get_subscribe_channels(self) -> list["RaffleChannel"]:
         return [ch for ch in self.raffle_channels
                 if ch.is_active and
-                ch.channel_type == ChannelTypeEnum.SUBSCRIBE]
+                ch.channel_type == RaffleChannelTypeEnum.SUBSCRIBE]
