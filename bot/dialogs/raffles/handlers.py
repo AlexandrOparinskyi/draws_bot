@@ -26,7 +26,9 @@ async def raffle_enter_title(message: Message,
 
     if len(message.text) > MAX_RAFFLE_TITLE_LENGTH:
         await message.answer(
-            text=i18n.raffle.title.error.length.text()
+            text=i18n.raffle.title.error.length.text(
+                max_symbols=MAX_RAFFLE_TITLE_LENGTH
+            )
         )
         return
 
@@ -42,7 +44,9 @@ async def raffle_enter_description(message: Message,
 
     if len(message.text) > MAX_RAFFLE_DESCRIPTION_LENGTH:
         await message.answer(
-            text=i18n.raffle.description.error.length.text()
+            text=i18n.raffle.description.error.length.text(
+                max_symbols=MAX_RAFFLE_DESCRIPTION_LENGTH
+            )
         )
         return
 
