@@ -25,3 +25,7 @@ class CreatedRaffleState(StatesGroup):
 class ChangeRaffleState(StatesGroup):
     changes = State()
     change_param = State()
+
+
+class ChannelState(StatesGroup):
+    home = State()
