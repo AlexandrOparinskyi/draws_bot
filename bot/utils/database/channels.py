@@ -99,7 +99,7 @@ async def get_user_active_channels(
 
             return [
                 (
-                    f"{'✅' if is_selected else '⬜'} {title}",
+                    f"{'✔︎' if is_selected else ''} {title}",
                     channel_id,
                     is_selected
                 )

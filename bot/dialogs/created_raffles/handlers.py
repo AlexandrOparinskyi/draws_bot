@@ -3,7 +3,7 @@ from aiogram_dialog import DialogManager, StartMode
 from aiogram_dialog.widgets.kbd import Button, Select
 
 from bot.states import UserState, CreatedRaffleState, EditRaffleState
-from bot.utils import delete_raffle_by_id, toggle_raffle_channel
+from bot.utils import delete_raffle_by_id, toggle_raffle_channel, get_raffle_by_id
 from database import RaffleChannelTypeEnum
 
 
@@ -145,3 +145,17 @@ async def created_raffle_add_public_subscribe(callback: CallbackQuery,
     await toggle_raffle_channel(raffle_id,
                                 int(item_id),
                                 RaffleChannelTypeEnum.SUBSCRIBE)
+
+
+async def created_raffle_start(callback: CallbackQuery,
+                               button: Button,
+                               dialog_manager: DialogManager) -> None:
+    raffle_id = int(dialog_manager.dialog_data.get("raffle_id"))
+    raffle = await get_raffle_by_id(raffle_id)
+
+    if not raffle.get_public_channels:
+        await dialog_manager.switch_to(state=CreatedRaffleState.start_error)
+        return
+
+    # await start raffle
+    # await dialog to page of run raffle detail

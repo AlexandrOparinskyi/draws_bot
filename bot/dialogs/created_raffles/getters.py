@@ -117,3 +117,9 @@ async def getter_created_channel_add_instruction(i18n: TranslatorHub,
                                                  **kwargs) -> dict[str, str]:
     return {"instruction_text": i18n.channel.add.instructions(),
             "back_button": i18n.back.button()}
+
+
+async def getter_created_error_start(i18n: TranslatorHub,
+                                     **kwargs) -> dict[str, str]:
+    return {"error_text": i18n.raffle.confirm.error.no.channels(),
+            "back_button": i18n.back.button()}

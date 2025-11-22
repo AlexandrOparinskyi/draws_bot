@@ -10,7 +10,7 @@ from .getters import (getter_created_raffle_home,
                       getter_created_raffle_preview,
                       getter_created_channel_subscribe,
                       getter_created_channel_add_instruction,
-                      getter_created_channel_public)
+                      getter_created_channel_public, getter_created_error_start)
 from .handlers import (created_raffle_back_to_start,
                        created_raffle_select_raffle,
                        created_raffle_back_to_select,
@@ -25,7 +25,8 @@ from .handlers import (created_raffle_back_to_start,
                        created_raffle_add_subscribe_channels,
                        created_raffle_add_public_channels,
                        created_raffle_add_public_channel,
-                       created_raffle_add_public_subscribe)
+                       created_raffle_add_public_subscribe,
+                       created_raffle_start)
 
 created_raffles_dialog = Dialog(
     Window(
@@ -58,7 +59,7 @@ created_raffles_dialog = Dialog(
                on_click=created_raffle_add_public_channels),
         Row(Button(text=Format("{start_raffle}"),
                    id="start_raffle",
-                   on_click=None),
+                   on_click=created_raffle_start),
             Button(text=Format("{delete_raffle}"),
                    id="delete_raffle",
                    on_click=created_raffle_delete_raffle)),
@@ -132,5 +133,13 @@ created_raffles_dialog = Dialog(
                on_click=created_raffle_back_to_channel),
         getter=getter_created_channel_add_instruction,
         state=CreatedRaffleState.add_channel_instruction
+    ),
+    Window(
+        Format("{error_text}"),
+        Button(text=Format("{back_button}"),
+               id="back_button",
+               on_click=created_raffle_back_to_raffle),
+        getter=getter_created_error_start,
+        state=CreatedRaffleState.start_error
     )
 )

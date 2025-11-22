@@ -23,6 +23,7 @@ class CreatedRaffleState(StatesGroup):
     post_channels = State()
     subscribe_channels = State()
     add_channel_instruction = State()
+    start_error = State()
 
 
 class EditRaffleState(StatesGroup):
