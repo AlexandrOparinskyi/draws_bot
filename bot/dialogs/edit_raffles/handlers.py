@@ -5,7 +5,7 @@ from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Button, Select
 
-from bot.states import ChangeRaffleState, CreatedRaffleState
+from bot.states import EditRaffleState, CreatedRaffleState
 from bot.utils import toggle_ref_system, delete_media_at_raffle_by_id, edit_selected_param
 from config import MAX_RAFFLE_TITLE_LENGTH, MAX_RAFFLE_DESCRIPTION_LENGTH
 
@@ -39,13 +39,13 @@ async def edit_raffle_edit_param(callback: CallbackQuery,
                                  item_id: str) -> None:
     dialog_manager.dialog_data.update(change_param=item_id)
 
-    await dialog_manager.switch_to(state=ChangeRaffleState.change_param)
+    await dialog_manager.switch_to(state=EditRaffleState.change_param)
 
 
 async def edit_raffle_back_to_changes(callback: CallbackQuery,
                                       button: Button,
                                       dialog_manager: DialogManager) -> None:
-    await dialog_manager.switch_to(state=ChangeRaffleState.changes)
+    await dialog_manager.switch_to(state=EditRaffleState.changes)
 
 
 async def edit_raffle_select_param(callback: CallbackQuery,
@@ -60,7 +60,7 @@ async def edit_raffle_select_param(callback: CallbackQuery,
     else:
         await edit_selected_param(change_param, int(item_id), raffle_id)
 
-    await dialog_manager.switch_to(state=ChangeRaffleState.changes)
+    await dialog_manager.switch_to(state=EditRaffleState.changes)
 
 
 async def edit_raffle_enter_param(message: Message,
@@ -120,7 +120,7 @@ async def edit_raffle_enter_param(message: Message,
 
     await edit_selected_param(change_param, value, raffle_id)
 
-    await dialog_manager.switch_to(state=ChangeRaffleState.changes)
+    await dialog_manager.switch_to(state=EditRaffleState.changes)
 
 
 async def edit_raffle_enter_media(message: Message,
@@ -139,4 +139,4 @@ async def edit_raffle_enter_media(message: Message,
 
     await edit_selected_param(param, value, raffle_id)
 
-    await dialog_manager.switch_to(state=ChangeRaffleState.changes)
+    await dialog_manager.switch_to(state=EditRaffleState.changes)

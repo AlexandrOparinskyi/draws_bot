@@ -14,7 +14,7 @@ from .handlers import (edit_raffle_edit_param,
                        edit_raffle_select_param,
                        edit_raffle_enter_param,
                        edit_raffle_enter_media)
-from bot.states import ChangeRaffleState
+from bot.states import EditRaffleState
 from ..raffles.handlers import raffle_error_format
 
 edit_raffle_dialog = Dialog(
@@ -34,7 +34,7 @@ edit_raffle_dialog = Dialog(
                id="back_button",
                on_click=edit_raffle_back_to_raffle),
         getter=getter_edit_raffle_changes,
-        state=ChangeRaffleState.changes,
+        state=EditRaffleState.changes,
     ),
     Window(
         Format("{changed_text}"),
@@ -55,6 +55,6 @@ edit_raffle_dialog = Dialog(
                id="back_button",
                on_click=edit_raffle_back_to_changes),
         getter=getter_edit_raffle_change_param,
-        state=ChangeRaffleState.change_param
+        state=EditRaffleState.change_param
     )
 )

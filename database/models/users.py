@@ -42,3 +42,7 @@ class User(Base):
     def completed_raffles(self)-> list["Raffle"]:
         return [r for r in self.raffles
                 if r.raffle_type == RaffleTypeEnum.COMPLETED]
+
+    @property
+    def active_channels(self) -> list["Channel"]:
+        return [ch for ch in self.channels if ch.can_post and ch.can_edit]

@@ -1,6 +1,6 @@
 import enum
 from typing import TYPE_CHECKING
-from sqlalchemy import String, ForeignKey, Enum, BigInteger
+from sqlalchemy import String, ForeignKey, Enum, BigInteger, Constraint, UniqueConstraint
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 
 from .base import Base
@@ -55,6 +55,9 @@ class Channel(Base):
 
 class RaffleChannel(Base):
     __tablename__ = "raffle_channels"
+    __table_args__ = (
+        UniqueConstraint("channel_id", "raffle_id", "channel_type"),
+    )
 
     channel_id: Mapped[int] = mapped_column(ForeignKey("channels.id"),
                                             nullable=False)

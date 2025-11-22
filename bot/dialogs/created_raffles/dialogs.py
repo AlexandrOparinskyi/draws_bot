@@ -7,7 +7,10 @@ from bot.states import CreatedRaffleState
 from .getters import (getter_created_raffle_home,
                       getter_created_raffle_raffle,
                       getter_create_raffle_confirm_delete,
-                      getter_created_raffle_preview)
+                      getter_created_raffle_preview,
+                      getter_created_channel_subscribe,
+                      getter_created_channel_add_instruction,
+                      getter_created_channel_public)
 from .handlers import (created_raffle_back_to_start,
                        created_raffle_select_raffle,
                        created_raffle_back_to_select,
@@ -16,7 +19,13 @@ from .handlers import (created_raffle_back_to_start,
                        created_raffle_delete_raffle,
                        created_raffle_preview,
                        created_raffle_preview_link,
-                       created_raffle_changes)
+                       created_raffle_changes,
+                       created_raffle_back_to_channel,
+                       created_raffle_add_channel_instructions,
+                       created_raffle_add_subscribe_channels,
+                       created_raffle_add_public_channels,
+                       created_raffle_add_public_channel,
+                       created_raffle_add_public_subscribe)
 
 created_raffles_dialog = Dialog(
     Window(
@@ -43,10 +52,10 @@ created_raffles_dialog = Dialog(
                    on_click=created_raffle_preview)),
         Button(text=Format("{subscribe_channels_button}"),
                id="subscribe_channels_button",
-               on_click=None),
+               on_click=created_raffle_add_subscribe_channels),
         Button(text=Format("{public_channels_button}"),
                id="public_channels_button",
-               on_click=None),
+               on_click=created_raffle_add_public_channels),
         Row(Button(text=Format("{start_raffle}"),
                    id="start_raffle",
                    on_click=None),
@@ -81,5 +90,47 @@ created_raffles_dialog = Dialog(
                on_click=created_raffle_back_to_raffle),
         getter=getter_created_raffle_preview,
         state=CreatedRaffleState.preview
+    ),
+    Window(
+        Format("{instruction_text}"),
+        Button(text=Format("{add_channel_button}"),
+               id="add_channel_button",
+               on_click=created_raffle_add_channel_instructions),
+        Group(Select(text=Format("{item[0]}"),
+                     id="enable_or_disable_channel",
+                     item_id_getter=lambda x: x[1],
+                     items="channels",
+                     on_click=created_raffle_add_public_channel),
+              width=1),
+        Button(text=Format("{back_button}"),
+               id="back_button",
+               on_click=created_raffle_back_to_raffle),
+        getter=getter_created_channel_public,
+        state=CreatedRaffleState.post_channels
+    ),
+    Window(
+        Format("{instruction_text}"),
+        Button(text=Format("{add_channel_button}"),
+               id="add_channel_button",
+               on_click=created_raffle_add_channel_instructions),
+        Group(Select(text=Format("{item[0]}"),
+                     id="enable_or_disable_channel",
+                     item_id_getter=lambda x: x[1],
+                     items="channels",
+                     on_click=created_raffle_add_public_subscribe),
+              width=1),
+        Button(text=Format("{back_button}"),
+               id="back_button",
+               on_click=created_raffle_back_to_raffle),
+        getter=getter_created_channel_subscribe,
+        state=CreatedRaffleState.subscribe_channels
+    ),
+    Window(
+        Format("{instruction_text}"),
+        Button(text=Format("{back_button}"),
+               id="back_button",
+               on_click=created_raffle_back_to_channel),
+        getter=getter_created_channel_add_instruction,
+        state=CreatedRaffleState.add_channel_instruction
     )
 )

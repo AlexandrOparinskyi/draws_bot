@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from typing import Any
 
 from aiogram.enums import ContentType
 from aiogram.types import User
@@ -6,8 +7,9 @@ from aiogram_dialog import DialogManager
 from aiogram_dialog.api.entities import MediaAttachment
 from fluentogram import TranslatorHub
 
-from bot.utils import get_user_by_id, get_raffle_by_id
+from bot.utils import get_user_by_id, get_raffle_by_id, get_user_active_channels
 from config import MAX_RAFFLE_TITLE_LENGTH, MAX_RAFFLE_DESCRIPTION_LENGTH
+from database import RaffleChannelTypeEnum
 
 
 async def getter_created_raffle_home(i18n: TranslatorHub,
@@ -76,4 +78,42 @@ async def getter_created_raffle_preview(i18n: TranslatorHub,
     return {"raffle_text": text,
             "title_button": button,
             "media": media,
+            "back_button": i18n.back.button()}
+
+
+async def getter_created_channel_subscribe(i18n: TranslatorHub,
+                                           event_from_user: User,
+                                           dialog_manager: DialogManager,
+                                           **kwargs) -> dict[str, Any]:
+    raffle_id = int(dialog_manager.dialog_data.get("raffle_id"))
+    user = await get_user_by_id(event_from_user.id)
+    channels = await get_user_active_channels(raffle_id,
+                                              user.id,
+                                              RaffleChannelTypeEnum.SUBSCRIBE)
+
+    return {"instruction_text": i18n.created.channel.instruction(),
+            "add_channel_button": i18n.channel.add.button(),
+            "channels": channels,
+            "back_button": i18n.back.button()}
+
+
+async def getter_created_channel_public(i18n: TranslatorHub,
+                                        event_from_user: User,
+                                        dialog_manager: DialogManager,
+                                        **kwargs) -> dict[str, Any]:
+    raffle_id = int(dialog_manager.dialog_data.get("raffle_id"))
+    user = await get_user_by_id(event_from_user.id)
+    channels = await get_user_active_channels(raffle_id,
+                                              user.id,
+                                              RaffleChannelTypeEnum.POST)
+
+    return {"instruction_text": i18n.created.channel.instruction(),
+            "add_channel_button": i18n.channel.add.button(),
+            "channels": channels,
+            "back_button": i18n.back.button()}
+
+
+async def getter_created_channel_add_instruction(i18n: TranslatorHub,
+                                                 **kwargs) -> dict[str, str]:
+    return {"instruction_text": i18n.channel.add.instructions(),
             "back_button": i18n.back.button()}

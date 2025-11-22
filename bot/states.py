@@ -20,9 +20,12 @@ class CreatedRaffleState(StatesGroup):
     raffle = State()
     confirm_delete = State()
     preview = State()
+    post_channels = State()
+    subscribe_channels = State()
+    add_channel_instruction = State()
 
 
-class ChangeRaffleState(StatesGroup):
+class EditRaffleState(StatesGroup):
     changes = State()
     change_param = State()
 
