@@ -66,5 +66,6 @@ class RaffleChannel(Base):
     )
     channel: Mapped["Channel"] = relationship(
         "Channel",
-        back_populates="raffle_channels"
+        back_populates="raffle_channels",
+        lazy="selectin"
     )

@@ -1,9 +1,18 @@
-from aiogram.types import CallbackQuery
+import logging
+
+from aiogram import Bot
+from aiogram.types import (CallbackQuery,
+                           InlineKeyboardButton,
+                           InlineKeyboardMarkup)
 from aiogram_dialog import DialogManager, StartMode
 from aiogram_dialog.widgets.kbd import Button, Select
 
 from bot.states import UserState, CreatedRaffleState, EditRaffleState
-from bot.utils import delete_raffle_by_id, get_raffle_by_id, toggle_raffle_channel
+from bot.utils import (delete_raffle_by_id,
+                       get_raffle_by_id,
+                       toggle_raffle_channel, edit_raffle_to_active)
+
+logger = logging.getLogger(__name__)
 
 
 async def created_raffle_back_to_start(callback: CallbackQuery,
@@ -106,10 +115,46 @@ async def created_raffle_start(callback: CallbackQuery,
                                dialog_manager: DialogManager) -> None:
     raffle_id = int(dialog_manager.dialog_data.get("raffle_id"))
     raffle = await get_raffle_by_id(raffle_id)
+    bot: Bot = dialog_manager.middleware_data.get("bot")
 
     if not raffle.raffle_channels:
         await dialog_manager.switch_to(state=CreatedRaffleState.start_error)
         return
 
-    # await start raffle
-    # await dialog to page of run raffle detail
+    date = raffle.end_date.strftime("%d.%m.%Y")
+    time = raffle.end_date.strftime("%H:%M")
+    text = f"{raffle.description}\n\nЗаканчивается {date} в {time}"
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(
+                text=raffle.title,
+                url=f"https://t.me/oparinskyi_bot?start={raffle.id}"
+            )]
+        ]
+    )
+
+    for channel in raffle.raffle_channels:
+        try:
+            if raffle.photo_id:
+                await bot.send_photo(channel.channel.chat_id,
+                                     photo=raffle.photo_id,
+                                     caption=text,
+                                     reply_markup=keyboard)
+            elif raffle.video_id:
+                await bot.send_video(channel.channel.chat_id,
+                                     video=raffle.video_id,
+                                     caption=text,
+                                     reply_markup=keyboard)
+            else:
+                await bot.send_message(channel.channel.chat_id,
+                                       text=text,
+                                       reply_markup=keyboard)
+        except Exception as err:
+            logger.error(f"Error send mail to channel/group "
+                         f"{channel.channel.chat_id} with id "
+                         f"{channel.channel.chat_id}: {err}")
+
+    await edit_raffle_to_active(raffle_id)
+    await callback.answer("Розыгрыш запущен")
+
+    await dialog_manager.start(UserState.home)

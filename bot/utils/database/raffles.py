@@ -5,7 +5,7 @@ from typing import Optional
 from sqlalchemy import insert, select, delete, update
 from sqlalchemy.exc import SQLAlchemyError
 
-from database import get_async_session, Raffle
+from database import get_async_session, Raffle, RaffleTypeEnum
 
 logger = logging.getLogger(__name__)
 
@@ -120,3 +120,17 @@ async def edit_selected_param(param: str,
         except SQLAlchemyError as err:
             logger.error(f"Database error update raffle param = {param} "
                          f"with id {raffle_id}: {err}")
+
+
+async def edit_raffle_to_active(raffle_id: int) -> None:
+    async with get_async_session() as session:
+        try:
+            await session.execute(update(Raffle).where(
+                Raffle.id == raffle_id
+            ).values(
+                raffle_type=RaffleTypeEnum.ACTIVE
+            ))
+            await session.commit()
+        except SQLAlchemyError as err:
+            logger.error(f"Database error edit raffle type with id {raffle_id}"
+                         f" to active: {err}")
