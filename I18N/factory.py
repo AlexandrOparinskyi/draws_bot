@@ -16,7 +16,8 @@ def create_translator_hub() -> TranslatorHub:
                                f'{DIR_PATH}/ru/user.ftl',
                                f'{DIR_PATH}/ru/raffle.ftl',
                                f'{DIR_PATH}/ru/created_raffle.ftl',
-                               f'{DIR_PATH}/ru/channel.ftl']),
+                               f'{DIR_PATH}/ru/channel.ftl',
+                               f'{DIR_PATH}/ru/edit_raffle.ftl',]),
             ),
             FluentTranslator(
                 locale='en',

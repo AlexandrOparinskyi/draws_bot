@@ -1,8 +1,8 @@
 """init
 
-Revision ID: 87930e2523d3
+Revision ID: 807a373822c2
 Revises: 
-Create Date: 2025-11-21 17:32:23.967409
+Create Date: 2025-11-24 13:56:07.661569
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '87930e2523d3'
+revision: str = '807a373822c2'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -32,16 +32,19 @@ def upgrade() -> None:
     sa.UniqueConstraint('username')
     )
     op.create_table('channels',
-    sa.Column('url', sa.String(length=200), nullable=False),
-    sa.Column('title', sa.String(length=500), nullable=False),
-    sa.Column('username', sa.String(length=500), nullable=False),
-    sa.Column('chat_id', sa.Integer(), nullable=False),
+    sa.Column('title', sa.String(length=500), nullable=True),
+    sa.Column('username', sa.String(length=500), nullable=True),
+    sa.Column('chat_id', sa.BigInteger(), nullable=False),
     sa.Column('type', sa.Enum('CHANNEL', 'GROUP', 'SUPERGROUP', name='chattypeenum'), nullable=False),
     sa.Column('user_id', sa.BigInteger(), nullable=False),
+    sa.Column('can_post', sa.Boolean(), nullable=False),
+    sa.Column('can_edit', sa.Boolean(), nullable=False),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='cascade'),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('chat_id'),
+    sa.UniqueConstraint('username')
     )
     op.create_table('raffles',
     sa.Column('user_id', sa.BigInteger(), nullable=False),
@@ -62,12 +65,12 @@ def upgrade() -> None:
     sa.Column('channel_id', sa.Integer(), nullable=False),
     sa.Column('raffle_id', sa.Integer(), nullable=False),
     sa.Column('is_active', sa.Boolean(), nullable=False),
-    sa.Column('channel_type', sa.Enum('SUBSCRIBE', 'POST', name='rafflechanneltypeenum'), nullable=False),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['channel_id'], ['channels.id'], ),
     sa.ForeignKeyConstraint(['raffle_id'], ['raffles.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('channel_id', 'raffle_id', name='uq_id')
     )
     # ### end Alembic commands ###
 

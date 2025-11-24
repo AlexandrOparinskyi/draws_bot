@@ -9,5 +9,4 @@ __all__ = ["Base",
            "RaffleTypeEnum",
            "Channel",
            "RaffleChannel",
-           "RaffleChannelTypeEnum",
            "ChatTypeEnum"]

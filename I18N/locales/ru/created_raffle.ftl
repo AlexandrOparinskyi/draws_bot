@@ -14,14 +14,12 @@ created-raffle-selected-text =
     Победителей: <b>{ $winners_count }</b>
     Реферальная система: <b>{ $ref_system }</b>
 
-    Добавлено каналов для подписки: <b>{ $subscribe_channels }</b>
-    Добавлено каналов для публикации: <b>{ $public_channels }</b>
+    Добавлено каналов: <b>{ $channels }</b>
 
     ❗ Для запуска розыгрыша необходим хотя бы 1 канал для публикации
 
 edit-raffle-button = ✏️ Редактировать
-subscribe-channels-button = 🔗 Каналы для подписки
-public-channels-button = 📢 Каналы для публикации
+add-channels-button = 📢 Каналы для подписки/публикации
 start-raffle-button =  ✅ Запустить
 delete-raffle-button = 🗑️ Удалить
 preview-raffle-button = 👁️‍ Превью

@@ -10,11 +10,6 @@ if TYPE_CHECKING:
     from .raffles import Raffle
 
 
-class RaffleChannelTypeEnum(enum.Enum):
-    SUBSCRIBE = "SUBSCRIBE"
-    POST = "POST"
-
-
 class ChatTypeEnum(enum.Enum):
     CHANNEL = "Channel"
     GROUP = "Group"
@@ -56,7 +51,7 @@ class Channel(Base):
 class RaffleChannel(Base):
     __tablename__ = "raffle_channels"
     __table_args__ = (
-        UniqueConstraint("channel_id", "raffle_id", "channel_type"),
+        UniqueConstraint("channel_id", "raffle_id", name="uq_id"),
     )
 
     channel_id: Mapped[int] = mapped_column(ForeignKey("channels.id"),
@@ -64,10 +59,6 @@ class RaffleChannel(Base):
     raffle_id: Mapped[int] = mapped_column(ForeignKey("raffles.id"),
                                            nullable=False)
     is_active: Mapped[bool] = mapped_column(nullable=False, default=True)
-    channel_type: Mapped[RaffleChannelTypeEnum] = mapped_column(
-        Enum(RaffleChannelTypeEnum),
-        nullable=False
-    )
 
     raffle: Mapped["Raffle"] = relationship(
         "Raffle",
