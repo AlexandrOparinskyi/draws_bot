@@ -8,7 +8,9 @@ from .getters import (getter_created_raffle_home,
                       getter_created_raffle_raffle,
                       getter_create_raffle_confirm_delete,
                       getter_created_raffle_preview,
-                      getter_created_error_start)
+                      getter_created_error_start,
+                      getter_created_add_channels,
+                      getter_raffle_add_channels_instr)
 from .handlers import (created_raffle_back_to_start,
                        created_raffle_select_raffle,
                        created_raffle_back_to_select,
@@ -18,7 +20,10 @@ from .handlers import (created_raffle_back_to_start,
                        created_raffle_preview,
                        created_raffle_preview_link,
                        created_raffle_changes,
-                       created_raffle_start)
+                       created_raffle_start,
+                       created_raffle_add_channels,
+                       created_raffle_channels_instr,
+                       created_raffle_toggle_channel)
 
 created_raffles_dialog = Dialog(
     Window(
@@ -45,7 +50,7 @@ created_raffles_dialog = Dialog(
                    on_click=created_raffle_preview)),
         Button(text=Format("{channels_button}"),
                id="channels_button",
-               on_click=None),
+               on_click=created_raffle_add_channels),
         Row(Button(text=Format("{start_raffle}"),
                    id="start_raffle",
                    on_click=created_raffle_start),
@@ -88,5 +93,30 @@ created_raffles_dialog = Dialog(
                on_click=created_raffle_back_to_raffle),
         getter=getter_created_error_start,
         state=CreatedRaffleState.start_error
+    ),
+    Window(
+        Format("{channels_text}"),
+        Button(text=Format("{instruction_button}"),
+               id="instruction_button",
+               on_click=created_raffle_channels_instr),
+        Group(Select(text=Format("{item[0]}"),
+                     id="toggle_channel",
+                     item_id_getter=lambda x: x[1],
+                     items="channels",
+                     on_click=created_raffle_toggle_channel),
+              width=1),
+        Button(text=Format("{back_button}"),
+               id="back_button",
+               on_click=created_raffle_back_to_raffle),
+        getter=getter_created_add_channels,
+        state=CreatedRaffleState.add_channels
+    ),
+    Window(
+        Format("{instruction_text}"),
+        Button(text=Format("{back_button}"),
+               id="back_button",
+               on_click=created_raffle_add_channels),
+        getter=getter_raffle_add_channels_instr,
+        state=CreatedRaffleState.add_channel_instruction
     )
 )

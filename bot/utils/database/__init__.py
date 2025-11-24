@@ -12,4 +12,6 @@ __all__ = ["get_user_by_id",
            "edit_selected_param",
            "create_channel",
            "get_channel_by_chat_id",
-           "delete_channel_by_chat_id"]
+           "delete_channel_by_chat_id",
+           "get_user_active_channels",
+           "toggle_raffle_channel"]

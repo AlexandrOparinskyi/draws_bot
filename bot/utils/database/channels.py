@@ -1,10 +1,11 @@
 import logging
 from typing import Optional
 
-from sqlalchemy import insert, select, delete
+from sqlalchemy import insert, select, delete, case, and_
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import aliased
 
-from database import ChatTypeEnum, get_async_session, Channel
+from database import ChatTypeEnum, get_async_session, Channel, RaffleChannel
 
 logger = logging.getLogger(__name__)
 
@@ -57,3 +58,72 @@ async def delete_channel_by_chat_id(chat_id: int) -> None:
         except SQLAlchemyError as err:
             logger.error(f"Database error delete channel with id {chat_id}: "
                          f"{err}")
+
+
+async def get_user_active_channels(
+        raffle_id: int,
+        user_id: int,
+) -> list:
+    async with get_async_session() as session:
+        try:
+            stmt = (
+                select(
+                    Channel.id,
+                    Channel.title,
+                    case(
+                        (RaffleChannel.raffle_id == raffle_id, True),
+                        else_=False
+                    ).label("is_selected")
+                )
+                .outerjoin(
+                    RaffleChannel,
+                    and_(RaffleChannel.channel_id == Channel.id,
+                         RaffleChannel.raffle_id == raffle_id)
+                )
+                .where(
+                    and_(Channel.user_id == user_id,
+                         Channel.can_post == True,
+                         Channel.can_edit == True)
+                )
+            )
+
+            result = await session.execute(stmt)
+            channels = result.all()
+
+            return [
+                (
+                    f"{'✔︎' if is_selected else ''} {title}",
+                    channel_id,
+                    is_selected
+                )
+                for channel_id, title, is_selected in channels
+            ]
+        except SQLAlchemyError as err:
+            logger.error(f"Database error get channels for "
+                         f"raffle {raffle_id} and user {user_id}: {err}")
+
+
+async def toggle_raffle_channel(raffle_id: int,
+                                channel_id: int) -> None:
+    """Create or delete raffle channel"""
+    async with get_async_session() as session:
+        try:
+            existing = await session.execute(select(RaffleChannel).where(
+                RaffleChannel.raffle_id == raffle_id,
+                RaffleChannel.channel_id == channel_id
+            ))
+            existing_channel = existing.scalar_one_or_none()
+
+            if existing_channel is None:
+                await session.execute(insert(RaffleChannel).values(
+                    raffle_id=raffle_id,
+                    channel_id=channel_id
+                ))
+            else:
+                await session.delete(existing_channel)
+
+            await session.commit()
+        except SQLAlchemyError as err:
+            logger.error(f"Database error create raffle channel "
+                         f"with raffle {raffle_id}, channel "
+                         f"{channel_id}: {err}")
