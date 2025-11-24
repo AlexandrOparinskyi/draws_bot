@@ -11,6 +11,7 @@ from bot.states import UserState, CreatedRaffleState, EditRaffleState
 from bot.utils import (delete_raffle_by_id,
                        get_raffle_by_id,
                        toggle_raffle_channel, edit_raffle_to_active)
+from config import Config, load_config
 
 logger = logging.getLogger(__name__)
 
@@ -116,6 +117,7 @@ async def created_raffle_start(callback: CallbackQuery,
     raffle_id = int(dialog_manager.dialog_data.get("raffle_id"))
     raffle = await get_raffle_by_id(raffle_id)
     bot: Bot = dialog_manager.middleware_data.get("bot")
+    config: Config = load_config()
 
     if not raffle.raffle_channels:
         await dialog_manager.switch_to(state=CreatedRaffleState.start_error)
@@ -153,6 +155,25 @@ async def created_raffle_start(callback: CallbackQuery,
             logger.error(f"Error send mail to channel/group "
                          f"{channel.channel.chat_id} with id "
                          f"{channel.channel.chat_id}: {err}")
+
+    try:
+        if raffle.photo_id:
+            await bot.send_photo(config.tg_bot.channels,
+                                 photo=raffle.photo_id,
+                                 caption=text,
+                                 reply_markup=keyboard)
+        elif raffle.video_id:
+            await bot.send_video(config.tg_bot.channels,
+                                 video=raffle.video_id,
+                                 caption=text,
+                                 reply_markup=keyboard)
+        else:
+            await bot.send_message(config.tg_bot.channels,
+                                   text=text,
+                                   reply_markup=keyboard)
+    except Exception as err:
+        logger.error(f"Error send mail to channel/group "
+                     f"{config.tg_bot.channels}: {err}")
 
     await edit_raffle_to_active(raffle_id)
     await callback.answer("Розыгрыш запущен")
