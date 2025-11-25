@@ -2,10 +2,11 @@ from aiogram_dialog import Dialog, Window
 from aiogram_dialog.widgets.kbd import Group, Select, Button, ListGroup, Url
 from aiogram_dialog.widgets.text import Format
 
+from reg_bot.states import PlayerState
 from .getters import (getter_player_home,
                       getter_player_raffle,
                       getter_player_check_sub)
-from reg_bot.states import PlayerState
+from .handlers import check_subscribe
 
 player_dialog = Dialog(
     Window(
@@ -32,7 +33,7 @@ player_dialog = Dialog(
                   items="channel_widget"),
         Button(text=Format("{confirm_button}"),
                id="confirm_button",
-               on_click=None),
+               on_click=check_subscribe),
         getter=getter_player_check_sub,
         state=PlayerState.check_subscribe
     )
