@@ -9,7 +9,7 @@ from .raffles import RaffleTypeEnum
 if TYPE_CHECKING:
     from .raffles import Raffle
     from .channels import Channel
-    from .players import Player
+    from .players import RafflePlayer
 
 
 class User(Base):
@@ -28,9 +28,11 @@ class User(Base):
     channels: Mapped[list["Channel"]] = relationship("Channel",
                                                      back_populates="user",
                                                      lazy="selectin")
-    players: Mapped[list["Player"]] = relationship("Player",
-                                                   back_populates="users",
-                                                   lazy="selectin")
+    raffle_players: Mapped[list["RafflePlayer"]] = relationship(
+        "RafflePlayer",
+        back_populates="users",
+        lazy="selectin"
+    )
 
     @property
     def created_raffles(self) -> list["Raffle"]:
@@ -46,3 +48,7 @@ class User(Base):
     def completed_raffles(self)-> list["Raffle"]:
         return [r for r in self.raffles
                 if r.raffle_type == RaffleTypeEnum.COMPLETED]
+
+    @property
+    def play_raffles(self) -> list["Raffle"]:
+        return [rp.raffles for rp in self.raffle_players]

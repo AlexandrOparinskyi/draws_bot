@@ -61,7 +61,7 @@ def load_config(path: str | None = None) -> Config:
     return Config(
         tg_bot=TgBot(
             token=env.str("BOT_TOKEN"),
-            channels=env.str("CHANNELS"),
+            channels=env.int("CHANNELS"),
             username=env.str("BOT_USERNAME")
         ),
         reg_tg_bot=RegTgBot(

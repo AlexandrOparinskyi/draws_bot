@@ -1,5 +1,6 @@
 from aiogram import Router
+from .players import players_router
 
 
 def register_handlers(router: Router) -> None:
-    pass
+    router.include_router(players_router)

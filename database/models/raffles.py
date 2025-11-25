@@ -10,7 +10,7 @@ from .base import Base
 if TYPE_CHECKING:
     from .users import User
     from .channels import RaffleChannel, Channel
-    from .players import Player
+    from .players import RafflePlayer
 
 
 class RaffleTypeEnum(enum.Enum):
@@ -48,9 +48,11 @@ class Raffle(Base):
         back_populates="raffle",
         lazy="selectin",
     )
-    players: Mapped[list["Player"]] = relationship("Player",
-                                                   back_populates="raffle",
-                                                   lazy="selectin")
+    raffle_players: Mapped[list["RafflePlayer"]] = relationship(
+        "RafflePlayer",
+        back_populates="raffles",
+        lazy="selectin"
+    )
 
     @property
     def channels(self) -> list["Channel"]:

@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 async def main(
         config: Config,
         translator_hub: TranslatorHub,
+        check_bot: Bot,
         storage: RedisStorage | MemoryStorage = MemoryStorage()
 ) -> None:
     bot: Bot = Bot(token=config.reg_tg_bot.token,
@@ -32,6 +33,9 @@ async def main(
     setup_dialogs(dp)
 
     try:
-        await dp.start_polling(bot, _translator_hub=translator_hub)
+        await dp.start_polling(bot,
+                               _translator_hub=translator_hub,
+                               check_bot=check_bot,
+                               config=config)
     except Exception as err:
         logger.error(f"Bot don`t started: {err}")

@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 async def get_user_by_id(user_id: int) -> Optional[User]:
     """Get user by id"""
+
     async with get_async_session() as session:
         try:
             return await session.scalar(select(User).where(

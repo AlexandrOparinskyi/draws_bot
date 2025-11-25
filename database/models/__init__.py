@@ -2,7 +2,7 @@ from .base import Base
 from .users import User
 from .raffles import *
 from .channels import *
-from .players import Player
+from .players import RafflePlayer
 
 __all__ = ["Base",
            "User",
@@ -11,4 +11,4 @@ __all__ = ["Base",
            "Channel",
            "RaffleChannel",
            "ChatTypeEnum",
-           "Player"]
+           "RafflePlayer"]

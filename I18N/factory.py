@@ -17,7 +17,8 @@ def create_translator_hub() -> TranslatorHub:
                                f'{DIR_PATH}/ru/raffle.ftl',
                                f'{DIR_PATH}/ru/created_raffle.ftl',
                                f'{DIR_PATH}/ru/channel.ftl',
-                               f'{DIR_PATH}/ru/edit_raffle.ftl',]),
+                               f'{DIR_PATH}/ru/edit_raffle.ftl',
+                               f'{DIR_PATH}/ru/player.ftl',]),
             ),
             FluentTranslator(
                 locale='en',
@@ -28,8 +29,8 @@ def create_translator_hub() -> TranslatorHub:
                                f'{DIR_PATH}/en/raffle.ftl',
                                f'{DIR_PATH}/en/created_raffle.ftl',
                                f'{DIR_PATH}/en/edit_raffle.ftl',
-                               f'{DIR_PATH}/en/channel.ftl']),
-
+                               f'{DIR_PATH}/en/channel.ftl',
+                               f'{DIR_PATH}/en/player.ftl', ]),
             ),
         ],
         root_locale='en',

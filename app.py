@@ -4,6 +4,7 @@ import logging
 from datetime import datetime, date
 from typing import Any
 
+from aiogram import Bot
 from aiogram.fsm.storage.base import DefaultKeyBuilder
 from aiogram.fsm.storage.redis import RedisStorage
 from redis.asyncio import Redis
@@ -72,6 +73,7 @@ async def main() -> None:
         json_loads=custom_json_loads,
         json_dumps=custom_json_dumps
     )
+    check_bot: Bot = Bot(token=config.tg_bot.token)
 
     await asyncio.gather(
         bot(
@@ -82,7 +84,8 @@ async def main() -> None:
         reg_bot(
             config,
             translator_hub,
-            reg_storage
+            check_bot,
+            reg_storage,
         )
     )
 

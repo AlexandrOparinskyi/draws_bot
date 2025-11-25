@@ -1,20 +1,20 @@
 from typing import Optional
-
-from sqlalchemy import ForeignKey, UniqueConstraint
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import TYPE_CHECKING
+
+from sqlalchemy import ForeignKey, UniqueConstraint, BigInteger
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
 
 if TYPE_CHECKING:
-    from .users import User
     from .raffles import Raffle
+    from .users import User
 
 
-class Player(Base):
-    __tablename__ = "players"
+class RafflePlayer(Base):
+    __tablename__ = "raffle_players"
     __table_args__ = (
-        UniqueConstraint("user_id", "raffle_id", name="ur_id"),
+        UniqueConstraint("user_id", "raffle_id", name="p_uq_id"),
     )
 
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id",
@@ -23,20 +23,15 @@ class Player(Base):
     raffle_id: Mapped[int] = mapped_column(ForeignKey("raffles.id",
                                                       ondelete="cascade"),
                                            nullable=False)
-    is_active: Mapped[bool] = mapped_column(nullable=False, default=True)
-    ref_parent_id: Mapped[Optional[int]] = mapped_column(
-        ForeignKey("users.id",
-                   ondelete="cascade"),
-        nullable=True
-    )
 
-    users: Mapped[list["User"]] = relationship("User",
-                                               back_populates="players",
-                                               lazy="selectin")
-    raffles: Mapped[list["Raffle"]] = relationship("Raffle",
-                                                   back_populates="players",
-                                                   lazy="selectin")
-    ref_parent: Mapped[Optional["User"]] = relationship(
+
+    users: Mapped["User"] = relationship(
         "User",
-        back_populates="referrals"
+        back_populates="raffle_players",
+        lazy="selectin"
+    )
+    raffles: Mapped["Raffle"] = relationship(
+        "Raffle",
+        back_populates="raffle_players",
+        lazy="selectin"
     )
