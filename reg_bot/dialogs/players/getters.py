@@ -1,8 +1,13 @@
+from aiogram import Bot
 from aiogram.types import User
 from aiogram_dialog import DialogManager
+from aiogram_dialog.widgets.kbd import Url
+from aiogram_dialog.widgets.text import Const
 from fluentogram import TranslatorHub
 
-from bot.utils import get_user_by_id
+from bot.utils import get_user_by_id, get_raffle_by_id
+from config import Config
+from reg_bot.utils import get_channels_for_subscribe
 
 
 async def getter_player_home(i18n: TranslatorHub,
@@ -29,3 +34,46 @@ async def getter_player_raffle(i18n: TranslatorHub,
         dialog_manager.start_data.clear()
 
     return {"text": "Okay"}
+
+
+async def getter_player_check_sub(i18n: TranslatorHub,
+                                  dialog_manager: DialogManager,
+                                  config: Config,
+                                  check_bot: Bot,
+                                  **kwargs) -> dict[str, str | list]:
+    if dialog_manager.start_data:
+        dialog_manager.dialog_data.update(**dialog_manager.start_data)
+        dialog_manager.start_data.clear()
+
+    raffle_id = int(dialog_manager.dialog_data.get("raffle_id"))
+    raffle = await get_raffle_by_id(raffle_id)
+    unsub_channels = dialog_manager.dialog_data.get("channels")
+    channels = await get_channels_for_subscribe(unsub_channels,
+                                                raffle_id)
+    channels_text = "\n".join(f"<b>• {ch.title}</b>"
+                              for ch in raffle.channels)
+
+    if not dialog_manager.dialog_data.get("main_channel"):
+        chat = await check_bot.get_chat(config.tg_bot.channel)
+        channels.append(config.tg_bot.channel)
+        channels_text += f"\n<b>• {chat.title}</b>"
+
+    text = i18n.player.subscribe.text(
+        channels=channels_text
+    )
+
+    channel_widget = []
+    for channel in channels:
+        chat = await check_bot.get_chat(channel)
+        if chat.username:
+            url = f"https://t.me/{chat.username}"
+        else:
+            invite = await check_bot.create_chat_invite_link(chat.id,
+                                                             member_limit=1)
+            url = invite.invite_link
+
+        channel_widget.append({"title": chat.title, "url": url, "id": chat.id})
+
+    return {"check_subscribe_text": text,
+            "channel_widget": channel_widget,
+            "confirm_button": i18n.player.subscribe.confirm()}

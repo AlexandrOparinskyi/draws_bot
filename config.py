@@ -5,7 +5,8 @@ from dataclasses import dataclass
 @dataclass
 class TgBot:
     token: str
-    channels: str
+    channel: str
+    channel_username: str
     username: str
 
 
@@ -61,7 +62,8 @@ def load_config(path: str | None = None) -> Config:
     return Config(
         tg_bot=TgBot(
             token=env.str("BOT_TOKEN"),
-            channels=env.int("CHANNELS"),
+            channel=env.int("CHANNELS"),
+            channel_username=env.str("CHANNEL_USERNAME"),
             username=env.str("BOT_USERNAME")
         ),
         reg_tg_bot=RegTgBot(
