@@ -5,3 +5,4 @@ class PlayerState(StatesGroup):
     home = State()
     raffle = State()
     check_subscribe = State()
+    invite = State()

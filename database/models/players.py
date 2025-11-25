@@ -23,6 +23,8 @@ class RafflePlayer(Base):
     raffle_id: Mapped[int] = mapped_column(ForeignKey("raffles.id",
                                                       ondelete="cascade"),
                                            nullable=False)
+    ref_parent: Mapped[Optional[int]] = mapped_column(BigInteger,
+                                                      nullable=True)
 
 
     users: Mapped["User"] = relationship(

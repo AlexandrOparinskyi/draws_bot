@@ -15,3 +15,23 @@ player-subscribe-text =
     { $channels }
 
 player-subscribe-confirm = ✅ Я подписался
+
+
+player-raffle-text =
+    🎁 <b>{ $title }</b>
+
+    { $description }
+
+    Пригласи друзей - повысь шансы на победу! 💪
+    Приглашено: <b>{ $friends_count }</b>
+
+    ⏰ Заканчивается { $date } в { $time }
+
+invite-friend = 🤝 Позвать друзей
+
+invite-instruction =
+    Для того, что бы пригласить друзей в розыгрыш - перешлите им сообщение выше
+
+    Каждый друг прибавляет +1 к шансу на победу 💪
+
+    ❗ Не работает при копировании сообщения

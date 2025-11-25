@@ -14,6 +14,7 @@ class TgBot:
 class RegTgBot:
     token: str
     username: str
+    media_chat: int
 
 
 @dataclass
@@ -68,7 +69,8 @@ def load_config(path: str | None = None) -> Config:
         ),
         reg_tg_bot=RegTgBot(
             token=env.str("REG_BOT_TOKEN"),
-            username=env.str("REG_BOT_USERNAME")
+            username=env.str("REG_BOT_USERNAME"),
+            media_chat=env.int("REG_MEDIA_CHAT")
         ),
         db=Db(
             host=env.str("DB_HOST", "localhost"),

@@ -49,19 +49,19 @@ async def send_mail_to_channels(bot: Bot,
 
     try:
         if raffle.photo_id:
-            await bot.send_photo(config.tg_bot.channels,
+            await bot.send_photo(config.tg_bot.channel,
                                  photo=raffle.photo_id,
                                  caption=text,
                                  reply_markup=keyboard)
         elif raffle.video_id:
-            await bot.send_video(config.tg_bot.channels,
+            await bot.send_video(config.tg_bot.channel,
                                  video=raffle.video_id,
                                  caption=text,
                                  reply_markup=keyboard)
         else:
-            await bot.send_message(config.tg_bot.channels,
+            await bot.send_message(config.tg_bot.channel,
                                    text=text,
                                    reply_markup=keyboard)
     except Exception as err:
         logger.error(f"Error send mail to channel/group "
-                     f"{config.tg_bot.channels}: {err}")
+                     f"{config.tg_bot.channel}: {err}")

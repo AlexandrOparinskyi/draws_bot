@@ -39,6 +39,8 @@ class Raffle(Base):
     )
     photo_id: Mapped[str] = mapped_column(String(100), nullable=True)
     video_id: Mapped[str] = mapped_column(String(100), nullable=True)
+    player_photo_id: Mapped[str] = mapped_column(String(100), nullable=True)
+    player_video_id: Mapped[str] = mapped_column(String(100), nullable=True)
 
     user: Mapped["User"] = relationship("User",
                                         back_populates="raffles",

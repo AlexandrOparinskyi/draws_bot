@@ -1,6 +1,6 @@
-from aiogram import Router, Bot
+from aiogram import Router, Bot, F
 from aiogram.filters import CommandStart, CommandObject
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 from aiogram_dialog import DialogManager, StartMode
 
 from bot.utils import get_raffle_by_id, get_user_by_id, create_user
@@ -29,46 +29,60 @@ async def command_start(message: Message,
                                    mode=StartMode.RESET_STACK)
         return
 
-    if len(command.args.split("_")) == 1:
-        raffle_id = int(command.args[0])
-        raffle = await get_raffle_by_id(raffle_id)
+    raffle_id = int(command.args.split("_")[0])
+    raffle = await get_raffle_by_id(raffle_id)
 
-        if raffle is None:
-            return
+    if raffle is None:
+        return
 
-        flag = True
-        sub_main_channel = True
-        unsubscribe_channels = []
+    flag = True
+    sub_main_channel = True
+    unsubscribe_channels = []
 
-        for channel in raffle.channels:
-            member = await check_bot.get_chat_member(channel.chat_id,
-                                                     message.from_user.id)
-            if member.status == "left":
-                unsubscribe_channels.append(channel.chat_id)
-                flag = False
-
-        member = await check_bot.get_chat_member(config.tg_bot.channel,
+    for channel in raffle.channels:
+        member = await check_bot.get_chat_member(channel.chat_id,
                                                  message.from_user.id)
         if member.status == "left":
+            unsubscribe_channels.append(channel.chat_id)
             flag = False
-            sub_main_channel = False
 
-        if flag:
-            player = await get_raffle_player(message.from_user.id,
-                                       raffle_id)
-            if player is None:
+    member = await check_bot.get_chat_member(config.tg_bot.channel,
+                                             message.from_user.id)
+    if member.status == "left":
+        flag = False
+        sub_main_channel = False
+
+    if flag:
+        player = await get_raffle_player(message.from_user.id,
+                                         raffle_id)
+        if player is None:
+            if command.args.split("_")[1]:
+                await create_raffle_player(message.from_user.id,
+                                           raffle_id,
+                                           int(command.args.split("_")[1]))
+            else:
                 await create_raffle_player(message.from_user.id,
                                            raffle_id)
 
-            await dialog_manager.start(state=PlayerState.raffle,
-                                       data={"raffle_id": raffle_id})
-            return
+        await dialog_manager.start(state=PlayerState.raffle,
+                                   data={"raffle_id": raffle_id})
+        return
 
-        await dialog_manager.start(state=PlayerState.check_subscribe,
-                                   data={"raffle_id": raffle_id,
-                                         "channels": unsubscribe_channels,
-                                         "main_channel": sub_main_channel})
-
+    if command.args.split("_")[1]:
+        ref_parent = command.args.split("_")[1]
     else:
-        pass
-        # Check a referral user
+        ref_parent = None
+
+    await dialog_manager.start(state=PlayerState.check_subscribe,
+                               data={"raffle_id": raffle_id,
+                                     "channels": unsubscribe_channels,
+                                     "main_channel": sub_main_channel,
+                                     "ref_parent": ref_parent})
+
+
+@players_router.callback_query(F.data == "back_to_raffle")
+async def back_to_raffle(callback: CallbackQuery,
+                         dialog_manager: DialogManager):
+    print(dialog_manager.dialog_data)
+    await dialog_manager.start(state=PlayerState.raffle,
+                               data=dialog_manager.dialog_data)
