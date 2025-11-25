@@ -9,7 +9,7 @@ from .base import Base
 
 if TYPE_CHECKING:
     from .users import User
-    from .channels import RaffleChannel
+    from .channels import RaffleChannel, Channel
 
 
 class RaffleTypeEnum(enum.Enum):
@@ -47,3 +47,8 @@ class Raffle(Base):
         back_populates="raffle",
         lazy="selectin",
     )
+
+    @property
+    def channels(self) -> list["Channel"]:
+        return [rc.channel for rc in self.raffle_channels
+                if rc.channel.can_post and rc.channel.can_edit]

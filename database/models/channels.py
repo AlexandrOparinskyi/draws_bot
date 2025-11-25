@@ -47,6 +47,14 @@ class Channel(Base):
         lazy="selectin"
     )
 
+    @property
+    def raffles(self) -> list["Raffle"]:
+        return [rc.raffle for rc in self.raffle_channels]
+
+    @property
+    def active_raffles(self) -> list["Raffle"]:
+        return [rc.raffle for rc in self.raffle_channels if rc.is_active]
+
 
 class RaffleChannel(Base):
     __tablename__ = "raffle_channels"

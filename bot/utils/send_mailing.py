@@ -26,26 +26,26 @@ async def send_mail_to_channels(bot: Bot,
         ]
     )
 
-    for channel in raffle.raffle_channels:
+    for channel in raffle.channels:
         try:
             if raffle.photo_id:
-                await bot.send_photo(channel.channel.chat_id,
+                await bot.send_photo(channel.chat_id,
                                      photo=raffle.photo_id,
                                      caption=text,
                                      reply_markup=keyboard)
             elif raffle.video_id:
-                await bot.send_video(channel.channel.chat_id,
+                await bot.send_video(channel.chat_id,
                                      video=raffle.video_id,
                                      caption=text,
                                      reply_markup=keyboard)
             else:
-                await bot.send_message(channel.channel.chat_id,
+                await bot.send_message(channel.chat_id,
                                        text=text,
                                        reply_markup=keyboard)
         except Exception as err:
             logger.error(f"Error send mail to channel/group "
-                         f"{channel.channel.chat_id} with id "
-                         f"{channel.channel.chat_id}: {err}")
+                         f"{channel.username} with id "
+                         f"{channel.chat_id}: {err}")
 
     try:
         if raffle.photo_id:
