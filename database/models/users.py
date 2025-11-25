@@ -9,6 +9,7 @@ from .raffles import RaffleTypeEnum
 if TYPE_CHECKING:
     from .raffles import Raffle
     from .channels import Channel
+    from .players import Player
 
 
 class User(Base):
@@ -27,6 +28,9 @@ class User(Base):
     channels: Mapped[list["Channel"]] = relationship("Channel",
                                                      back_populates="user",
                                                      lazy="selectin")
+    players: Mapped[list["Player"]] = relationship("Player",
+                                                   back_populates="users",
+                                                   lazy="selectin")
 
     @property
     def created_raffles(self) -> list["Raffle"]:
