@@ -11,6 +11,7 @@ from redis.asyncio import Redis
 from I18N import create_translator_hub
 from config import Config, load_config
 from bot import bot
+from reg_bot import reg_bot
 
 logging.basicConfig(
     level=logging.INFO,
@@ -59,11 +60,31 @@ async def main() -> None:
         json_dumps=custom_json_dumps
     )
 
-    await asyncio.gather(bot(
-        config,
-        translator_hub,
-        storage
-    ))
+    reg_redis_client = Redis(
+        host=config.reg_redis.host,
+        port=config.reg_redis.port,
+        db=config.reg_redis.db,
+        decode_responses=False
+    )
+    reg_storage = RedisStorage(
+        reg_redis_client,
+        key_builder=DefaultKeyBuilder(with_destiny=True, prefix='r_bot_fsm'),
+        json_loads=custom_json_loads,
+        json_dumps=custom_json_dumps
+    )
+
+    await asyncio.gather(
+        bot(
+            config,
+            translator_hub,
+            storage
+        ),
+        reg_bot(
+            config,
+            translator_hub,
+            reg_storage
+        )
+    )
 
 
 if __name__ == "__main__":

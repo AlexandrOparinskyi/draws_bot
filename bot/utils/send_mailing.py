@@ -20,7 +20,8 @@ async def send_mail_to_channels(bot: Bot,
         inline_keyboard=[
             [InlineKeyboardButton(
                 text=raffle.title,
-                url=f"https://t.me/oparinskyi_bot?start={raffle.id}"
+                url=f"https://t.me/{config.reg_tg_bot.username}?"
+                    f"start={raffle.id}"
             )]
         ]
     )
