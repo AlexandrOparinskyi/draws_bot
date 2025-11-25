@@ -19,7 +19,7 @@ async def getter_player_home(i18n: TranslatorHub,
                              **kwargs) -> dict[str, str | list]:
     user = await get_user_by_id(event_from_user.id)
 
-    if user.raffle_players:
+    if user.play_raffles:
         home_text = i18n.player.home.text()
         play_raffles = user.play_raffles
     else:

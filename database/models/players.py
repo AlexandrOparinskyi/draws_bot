@@ -32,7 +32,7 @@ class RafflePlayer(Base):
         back_populates="raffle_players",
         lazy="selectin"
     )
-    raffles: Mapped["Raffle"] = relationship(
+    raffle: Mapped["Raffle"] = relationship(
         "Raffle",
         back_populates="raffle_players",
         lazy="selectin"

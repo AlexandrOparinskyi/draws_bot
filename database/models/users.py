@@ -51,4 +51,5 @@ class User(Base):
 
     @property
     def play_raffles(self) -> list["Raffle"]:
-        return [rp.raffles for rp in self.raffle_players]
+        return [rp.raffle for rp in self.raffle_players
+                if rp.raffle.raffle_type == RaffleTypeEnum.ACTIVE]
