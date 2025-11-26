@@ -25,6 +25,10 @@ class CreatedRaffleState(StatesGroup):
     start_error = State()
 
 
+class ActiveRaffleState(StatesGroup):
+    home = State()
+
+
 class EditRaffleState(StatesGroup):
     changes = State()
     change_param = State()
