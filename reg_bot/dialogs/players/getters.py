@@ -107,7 +107,7 @@ async def getter_player_raffle(i18n: TranslatorHub,
                     new_file_id
                 )
 
-    invite_button = None
+    invite_button = ""
     if raffle.ref_system:
         invite_button = i18n.invite.friend()
 
