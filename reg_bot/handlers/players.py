@@ -56,7 +56,7 @@ async def command_start(message: Message,
         player = await get_raffle_player(message.from_user.id,
                                          raffle_id)
         if player is None:
-            if command.args.split("_")[1]:
+            if len(command.args.split("_")) == 2:
                 await create_raffle_player(message.from_user.id,
                                            raffle_id,
                                            int(command.args.split("_")[1]))
@@ -68,7 +68,7 @@ async def command_start(message: Message,
                                    data={"raffle_id": raffle_id})
         return
 
-    if command.args.split("_")[1]:
+    if len(command.args.split("_")) == 2:
         ref_parent = command.args.split("_")[1]
     else:
         ref_parent = None

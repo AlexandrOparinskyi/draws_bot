@@ -27,6 +27,10 @@ class CreatedRaffleState(StatesGroup):
 
 class ActiveRaffleState(StatesGroup):
     home = State()
+    raffle = State()
+    finish_confirm = State()
+    sub_channels = State()
+    add_channel_instruction = State()
 
 
 class EditRaffleState(StatesGroup):

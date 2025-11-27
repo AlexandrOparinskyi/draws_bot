@@ -60,3 +60,7 @@ class Raffle(Base):
     def channels(self) -> list["Channel"]:
         return [rc.channel for rc in self.raffle_channels
                 if rc.channel.can_post and rc.channel.can_edit]
+
+    @property
+    def players(self) -> list["User"]:
+        return [rp.user for rp in self.raffle_players]

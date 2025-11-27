@@ -74,11 +74,13 @@ async def main() -> None:
         json_dumps=custom_json_dumps
     )
     check_bot: Bot = Bot(token=config.tg_bot.token)
+    sender_bot: Bot = Bot(token=config.reg_tg_bot.token)
 
     await asyncio.gather(
         bot(
             config,
             translator_hub,
+            sender_bot,
             storage
         ),
         reg_bot(

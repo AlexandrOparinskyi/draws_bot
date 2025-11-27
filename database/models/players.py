@@ -27,7 +27,7 @@ class RafflePlayer(Base):
                                                       nullable=True)
 
 
-    users: Mapped["User"] = relationship(
+    user: Mapped["User"] = relationship(
         "User",
         back_populates="raffle_players",
         lazy="selectin"

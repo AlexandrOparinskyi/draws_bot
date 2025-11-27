@@ -30,7 +30,7 @@ class User(Base):
                                                      lazy="selectin")
     raffle_players: Mapped[list["RafflePlayer"]] = relationship(
         "RafflePlayer",
-        back_populates="users",
+        back_populates="user",
         lazy="selectin"
     )
 

@@ -5,7 +5,9 @@ from aiogram_dialog.widgets.text import Format
 from bot.states import UserState
 from .getters import getter_user_home
 from .handlers import (user_create_raffle,
-                       user_created_raffles, user_channels)
+                       user_created_raffles,
+                       user_channels,
+                       user_active_raffles)
 
 user_dialog = Dialog(
     Window(
@@ -18,7 +20,7 @@ user_dialog = Dialog(
                on_click=user_created_raffles),
         Button(text=Format("{active_raffles_button}"),
                id="active_raffles_button",
-               on_click=None),
+               on_click=user_active_raffles),
         Button(text=Format("{completed_raffles_button}"),
                id="completed_raffles_button",
                on_click=None),

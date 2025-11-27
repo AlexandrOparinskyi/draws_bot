@@ -139,3 +139,17 @@ async def edit_raffle_to_active(raffle_id: int) -> None:
         except SQLAlchemyError as err:
             logger.error(f"Database error edit raffle type with id {raffle_id}"
                          f" to active: {err}")
+
+
+async def edit_raffle_to_complete(raffle_id: int) -> None:
+    async with get_async_session() as session:
+        try:
+            await session.execute(update(Raffle).where(
+                Raffle.id == raffle_id
+            ).values(
+                raffle_type=RaffleTypeEnum.COMPLETED
+            ))
+            await session.commit()
+        except SQLAlchemyError as err:
+            logger.error(f"Database error edit raffle type with id {raffle_id}"
+                         f" to active: {err}")
