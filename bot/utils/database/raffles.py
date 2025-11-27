@@ -153,3 +153,13 @@ async def edit_raffle_to_complete(raffle_id: int) -> None:
         except SQLAlchemyError as err:
             logger.error(f"Database error edit raffle type with id {raffle_id}"
                          f" to active: {err}")
+
+
+async def get_active_raffles() -> Optional[list[Raffle]]:
+    async with get_async_session() as session:
+        try:
+            return await session.scalars(select(Raffle).where(
+                Raffle.raffle_type == RaffleTypeEnum.ACTIVE
+            ))
+        except SQLAlchemyError as err:
+            logger.error(f"Database error get all raffles: {err}")

@@ -16,4 +16,5 @@ __all__ = ["get_user_by_id",
            "get_user_active_channels",
            "toggle_raffle_channel",
            "edit_raffle_to_active",
-           "edit_raffle_to_complete"]
+           "edit_raffle_to_complete",
+           "get_active_raffles"]

@@ -1,6 +1,7 @@
 aiogram
 aiogram_dialog
 alembic
+apscheduler
 environs
 asyncpg
 flake8

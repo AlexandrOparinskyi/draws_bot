@@ -4,9 +4,9 @@ import random
 from aiogram import Bot
 from aiogram.enums import ParseMode
 
-from bot.utils import get_raffle_by_id, edit_raffle_to_complete
-from database import User, Channel, Raffle
+from database import User, Channel
 from reg_bot.utils import get_referrals_count
+from .database import get_raffle_by_id, edit_raffle_to_complete
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +40,7 @@ async def completed_raffle(raffle_id: int,
 
         participants_pool = [p for p in participants_pool if p != winner]
 
-    # await edit_raffle_to_complete(raffle_id)
+    await edit_raffle_to_complete(raffle_id)
     await _winners_mailing(winners, bot, raffle.title)
     await _owner_mailing(raffle.user_id, check_bot, raffle.title, winners)
 
