@@ -25,6 +25,7 @@ class RafflePlayer(Base):
                                            nullable=False)
     ref_parent: Mapped[Optional[int]] = mapped_column(BigInteger,
                                                       nullable=True)
+    place: Mapped[Optional[int]] = mapped_column(nullable=True)
 
 
     user: Mapped["User"] = relationship(

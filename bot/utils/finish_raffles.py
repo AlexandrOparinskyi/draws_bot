@@ -4,8 +4,9 @@ import random
 from aiogram import Bot
 from aiogram.enums import ParseMode
 
-from database import User, Channel
+from database import User, Channel, Raffle
 from reg_bot.utils import get_referrals_count
+from . import make_place_to_player
 from .database import get_raffle_by_id, edit_raffle_to_complete
 
 logger = logging.getLogger(__name__)
@@ -41,7 +42,7 @@ async def completed_raffle(raffle_id: int,
         participants_pool = [p for p in participants_pool if p != winner]
 
     await edit_raffle_to_complete(raffle_id)
-    await _winners_mailing(winners, bot, raffle.title)
+    await _winners_mailing(winners, bot, raffle)
     await _owner_mailing(raffle.user_id, check_bot, raffle.title, winners)
 
 
@@ -57,13 +58,17 @@ async def _check_subscribes(check_bot: Bot,
     return True
 
 
-async def _winners_mailing(winners: list[User], bot: Bot, title: str) -> None:
+async def _winners_mailing(winners: list[User],
+                           bot: Bot,
+                           raffle: Raffle) -> None:
     for place, winner in enumerate(winners, 1):
+        await make_place_to_player(place, winner.id, raffle.id)
         try:
             await bot.send_message(
                 chat_id=winner.id,
                 text=f"Поздравляем 🔥\n\n"
-                     f"Вы заняли {place} место в розыгрыше <b>{title}</b>\n\n"
+                     f"Вы заняли {place} место в розыгрыше "
+                     f"<b>{raffle.title}</b>\n\n"
                      f"Скоро с вами свяжется организатор",
                 parse_mode=ParseMode.HTML
             )

@@ -52,3 +52,6 @@ async def get_referrals_count(player_id: int) -> int:
         except SQLAlchemyError as err:
             logger.error(f"Database error get count referrals: {err}")
             return 0
+
+
+
