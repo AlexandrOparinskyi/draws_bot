@@ -40,15 +40,23 @@ async def command_start(message: Message,
     unsubscribe_channels = []
 
     for channel in raffle.channels:
-        member = await check_bot.get_chat_member(channel.chat_id,
+        try:
+            member = await check_bot.get_chat_member(channel.chat_id,
+                                                     message.from_user.id)
+            if member.status == "left":
+                unsubscribe_channels.append(channel.chat_id)
+                flag = False
+        except:
+            flag = False
+            unsubscribe_channels.append(channel.chat_id)
+
+    try:
+        member = await check_bot.get_chat_member(config.tg_bot.channel,
                                                  message.from_user.id)
         if member.status == "left":
-            unsubscribe_channels.append(channel.chat_id)
             flag = False
-
-    member = await check_bot.get_chat_member(config.tg_bot.channel,
-                                             message.from_user.id)
-    if member.status == "left":
+            sub_main_channel = False
+    except:
         flag = False
         sub_main_channel = False
 
