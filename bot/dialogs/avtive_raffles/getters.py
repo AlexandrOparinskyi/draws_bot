@@ -52,17 +52,3 @@ async def getter_finish_confirm(i18n: TranslatorHub,
     return {"confirm_text": confirm_text,
             "yes_button": i18n.finish.yes.button(),
             "no_button": i18n.finish.no.button()}
-
-
-async def getter_subscribe_channels(i18n: TranslatorHub,
-                                    event_from_user: User,
-                                    dialog_manager: DialogManager,
-                                    **kwargs) -> dict[str, str | list]:
-    raffle_id = int(dialog_manager.dialog_data.get("raffle_id"))
-    channels = await get_user_active_channels(raffle_id,
-                                              event_from_user.id)
-
-    return {"sub_text": i18n.created.channel.instruction(),
-            "channels": channels,
-            "back_button": i18n.back.button(),
-            "add_channel_button": i18n.channel.add.button()}
