@@ -40,20 +40,6 @@ async def active_raffle_back_to_raffle(callback: CallbackQuery,
     await dialog_manager.switch_to(state=ActiveRaffleState.raffle)
 
 
-async def active_raffle_sub_channels(callback: CallbackQuery,
-                                     button: Button,
-                                     dialog_manager: DialogManager) -> None:
-    await dialog_manager.switch_to(state=ActiveRaffleState.sub_channels)
-
-
-async def active_raffle_channel_inst(callback: CallbackQuery,
-                                     button: Button,
-                                     dialog_manager: DialogManager) -> None:
-    await dialog_manager.switch_to(
-        state=ActiveRaffleState.add_channel_instruction
-    )
-
-
 async def active_raffle_finish(callback: CallbackQuery,
                                button: Button,
                                dialog_manager: DialogManager) -> None:
