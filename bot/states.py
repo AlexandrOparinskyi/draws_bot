@@ -33,6 +33,11 @@ class ActiveRaffleState(StatesGroup):
     add_channel_instruction = State()
 
 
+class CompletedRaffleState(StatesGroup):
+    home = State()
+    raffle = State()
+
+
 class EditRaffleState(StatesGroup):
     changes = State()
     change_param = State()

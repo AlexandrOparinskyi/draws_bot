@@ -5,6 +5,7 @@ from aiogram_dialog import DialogManager, StartMode
 
 from bot.utils import get_raffle_by_id, get_user_by_id, create_user
 from config import Config
+from database import RaffleTypeEnum
 from reg_bot.states import PlayerState
 from reg_bot.utils import create_raffle_player, get_raffle_player
 
@@ -33,6 +34,10 @@ async def command_start(message: Message,
     raffle = await get_raffle_by_id(raffle_id)
 
     if raffle is None:
+        return
+
+    if raffle.raffle_type == RaffleTypeEnum.COMPLETED:
+        await message.answer("Розыгрыш завершен")
         return
 
     flag = True

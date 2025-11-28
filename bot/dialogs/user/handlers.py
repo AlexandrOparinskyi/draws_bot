@@ -5,7 +5,7 @@ from aiogram_dialog.widgets.kbd import Button
 from bot.states import (RaffleState,
                         CreatedRaffleState,
                         ChannelState,
-                        ActiveRaffleState)
+                        ActiveRaffleState, CompletedRaffleState)
 
 
 async def user_create_raffle(callback: CallbackQuery,
@@ -27,6 +27,12 @@ async def user_channels(callback: CallbackQuery,
 
 
 async def user_active_raffles(callback: CallbackQuery,
-                             button: Button,
-                             dialog_manager: DialogManager) -> None:
+                              button: Button,
+                              dialog_manager: DialogManager) -> None:
     await dialog_manager.start(state=ActiveRaffleState.home)
+
+
+async def user_completed_raffle(callback: CallbackQuery,
+                                button: Button,
+                                dialog_manager: DialogManager) -> None:
+    await dialog_manager.start(state=CompletedRaffleState.home)
