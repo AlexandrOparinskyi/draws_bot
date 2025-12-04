@@ -59,7 +59,7 @@ async def raffle_load_media(message: Message,
                             widget: MessageInput,
                             dialog_manager: DialogManager) -> None:
     if message.photo:
-        dialog_manager.dialog_data.update(photo_id=message.photo[0].file_id)
+        dialog_manager.dialog_data.update(photo_id=message.photo[-1].file_id)
 
     if message.video:
         dialog_manager.dialog_data.update(video_id=message.video.file_id)
