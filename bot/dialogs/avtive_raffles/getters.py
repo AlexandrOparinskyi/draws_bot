@@ -2,7 +2,7 @@ from aiogram.types import User
 from aiogram_dialog import DialogManager
 from fluentogram import TranslatorHub
 
-from bot.utils import get_user_by_id, get_raffle_by_id, get_user_active_channels
+from bot.utils import get_user_by_id, get_raffle_by_id
 
 
 async def getter_active_raffle_home(i18n: TranslatorHub,

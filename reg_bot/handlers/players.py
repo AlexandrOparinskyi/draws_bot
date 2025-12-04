@@ -18,6 +18,9 @@ async def command_start(message: Message,
                         dialog_manager: DialogManager,
                         check_bot: Bot,
                         config: Config):
+    if message.from_user.is_bot:
+        return
+
     user = await get_user_by_id(message.from_user.id)
     if user is None:
         await create_user(message.from_user.id,

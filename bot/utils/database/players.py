@@ -1,6 +1,6 @@
 import logging
 
-from sqlalchemy import update, and_
+from sqlalchemy import update, and_, select
 from sqlalchemy.exc import SQLAlchemyError
 
 from database import get_async_session, RafflePlayer
@@ -23,3 +23,16 @@ async def make_place_to_player(place: int,
         except SQLAlchemyError as err:
             logger.error(f"Database error make place to player {player_id}: "
                          f"{err}")
+
+
+async def get_winners(raffle_id: int) -> list[RafflePlayer]:
+    async with get_async_session() as session:
+        try:
+            return await session.scalars(select(RafflePlayer).where(
+                and_(RafflePlayer.place.is_not(None),
+                     RafflePlayer.raffle_id == raffle_id)
+            ).order_by(
+                RafflePlayer.place
+            ))
+        except SQLAlchemyError as err:
+            logger.error(f"Database error get winners:{err}")

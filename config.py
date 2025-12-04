@@ -8,6 +8,7 @@ class TgBot:
     channel: str
     channel_username: str
     username: str
+    admins: list[int]
 
 
 @dataclass
@@ -65,7 +66,8 @@ def load_config(path: str | None = None) -> Config:
             token=env.str("BOT_TOKEN"),
             channel=env.int("CHANNELS"),
             channel_username=env.str("CHANNEL_USERNAME"),
-            username=env.str("BOT_USERNAME")
+            username=env.str("BOT_USERNAME"),
+            admins=[int(i) for i in env.str("ADMINS").split(",")]
         ),
         reg_tg_bot=RegTgBot(
             token=env.str("REG_BOT_TOKEN"),

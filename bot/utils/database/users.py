@@ -38,3 +38,8 @@ async def create_user(user_id: int,
             await session.commit()
         except SQLAlchemyError as err:
             logger.error(f"Database error create a new user: {err}")
+
+
+async def get_all_users():
+    async with get_async_session() as session:
+        return await session.scalars(select(User))

@@ -51,6 +51,7 @@ async def main(
         await setup_scheduler(bot, sender_bot)
         await dp.start_polling(bot,
                                _translator_hub=translator_hub,
-                               sender_bot=sender_bot)
+                               sender_bot=sender_bot,
+                               config=config)
     except Exception as err:
         logger.error(f"Bot don`t started: {err}")

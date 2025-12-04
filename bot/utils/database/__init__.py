@@ -1,7 +1,7 @@
 from .users import *
 from .raffles import *
 from .channels import *
-from .players import make_place_to_player
+from .players import *
 
 __all__ = ["get_user_by_id",
            "create_user",
@@ -19,4 +19,6 @@ __all__ = ["get_user_by_id",
            "edit_raffle_to_active",
            "edit_raffle_to_complete",
            "get_active_raffles",
-           "make_place_to_player"]
+           "make_place_to_player",
+           "get_winners",
+           "get_all_users"]
