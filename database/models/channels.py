@@ -62,7 +62,8 @@ class RaffleChannel(Base):
         UniqueConstraint("channel_id", "raffle_id", name="uq_id"),
     )
 
-    channel_id: Mapped[int] = mapped_column(ForeignKey("channels.id"),
+    channel_id: Mapped[int] = mapped_column(ForeignKey("channels.id",
+                                                       ondelete="cascade"),
                                             nullable=False)
     raffle_id: Mapped[int] = mapped_column(ForeignKey("raffles.id"),
                                            nullable=False)
