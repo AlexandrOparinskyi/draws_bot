@@ -39,19 +39,18 @@ async def create_raffle_player(user_id: int,
             logger.error(f"Database error create a new raffle player: {err}")
 
 
-async def get_referrals_count(player_id: int) -> int:
+async def get_referrals_count(player_id: int,
+                              raffle_id: int) -> int:
     """Get count referrals for players by id"""
     async with get_async_session() as session:
         try:
             result = await session.execute(select(
                 func.count(RafflePlayer.id)
             ).where(
-                RafflePlayer.ref_parent == player_id
+                and_(RafflePlayer.ref_parent == player_id,
+                     RafflePlayer.raffle_id == raffle_id)
             ))
             return result.scalar() or 0
         except SQLAlchemyError as err:
             logger.error(f"Database error get count referrals: {err}")
             return 0
-
-
-

@@ -43,7 +43,8 @@ async def getter_player_raffle(i18n: TranslatorHub,
 
     date = raffle.end_date.strftime("%d.%m.%Y")
     time = raffle.end_date.strftime("%H:%M")
-    friends_count = await get_referrals_count(event_from_user.id)
+    friends_count = await get_referrals_count(event_from_user.id,
+                                              raffle_id)
 
     raffle_text = i18n.player.raffle.text(
         title=raffle.title,

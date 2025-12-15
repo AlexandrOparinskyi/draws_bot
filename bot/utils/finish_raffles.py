@@ -28,7 +28,8 @@ async def completed_raffle(raffle_id: int,
             continue
 
         if raffle.ref_system:
-            referrals_count = await get_referrals_count(player.id)
+            referrals_count = await get_referrals_count(player.id,
+                                                        raffle_id)
             participants_pool.extend([player] * (referrals_count + 1))
         else:
             participants_pool.append(player)
