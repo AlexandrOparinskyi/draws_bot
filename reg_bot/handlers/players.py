@@ -99,6 +99,5 @@ async def command_start(message: Message,
 @players_router.callback_query(F.data == "back_to_raffle")
 async def back_to_raffle(callback: CallbackQuery,
                          dialog_manager: DialogManager):
-    print(dialog_manager.dialog_data)
     await dialog_manager.start(state=PlayerState.raffle,
                                data=dialog_manager.dialog_data)
