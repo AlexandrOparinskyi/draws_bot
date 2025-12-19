@@ -92,9 +92,9 @@ def load_config(path: str | None = None) -> Config:
             db=env.int("REDIS_DB", 0),
         ),
         reg_redis=RegRedisConfig(
-            host=env.str("_REG_REDIS_HOST", "localhost"),
-            port=env.int("_REG_REDIS_PORT", 6379),
-            db=env.int("_REG_REDIS_DB", 1),
+            host=env.str("REG_REDIS_HOST", "localhost"),
+            port=env.int("REG_REDIS_PORT", 6379),
+            db=env.int("REG_REDIS_DB", 1),
         )
     )
 

@@ -1,0 +1,57 @@
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  migrations:
+    build:
+      context: .
+      dockerfile: migrations/Dockerfile
+    container_name: migrations
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: on-failure
+
+  redis:
+    image: redis:7-alpine
+    container_name: bot_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    depends_on:
+      - migrations
+
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bot
+    env_file:
+      - .env
+    depends_on:
+      - migrations
+
+
+volumes:
+  db_data:
+  redis_data:
