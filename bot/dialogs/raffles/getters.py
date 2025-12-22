@@ -1,8 +1,5 @@
 from datetime import datetime, timedelta
 
-from aiogram.enums import ContentType
-from aiogram_dialog import DialogManager
-from aiogram_dialog.api.entities import MediaAttachment
 from fluentogram import TranslatorHub
 
 from config import MAX_RAFFLE_TITLE_LENGTH, MAX_RAFFLE_DESCRIPTION_LENGTH
