@@ -1,7 +1,8 @@
 from aiogram import Router, Bot, F
 from aiogram.filters import CommandStart, CommandObject
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, ErrorEvent
 from aiogram_dialog import DialogManager, StartMode
+from aiogram_dialog.api.exceptions import UnknownIntent
 
 from bot.utils import get_raffle_by_id, get_user_by_id, create_user
 from config import Config
@@ -10,6 +11,14 @@ from reg_bot.states import PlayerState
 from reg_bot.utils import create_raffle_player, get_raffle_player
 
 players_router = Router()
+
+
+@players_router.errors()
+async def handle_unknown_intent(event: ErrorEvent):
+    if isinstance(event.exception, UnknownIntent):
+        await event.update.callback_query.answer("Сессия устарела. Введите команду /start",
+                                                 show_alert=True)
+        return True
 
 
 @players_router.message(CommandStart())

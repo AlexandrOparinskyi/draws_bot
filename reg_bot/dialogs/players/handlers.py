@@ -1,6 +1,7 @@
 import logging
 
 from aiogram import Bot
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.kbd import Button, Select
@@ -35,12 +36,15 @@ async def check_subscribe(callback: CallbackQuery,
     config: Config = dialog_manager.middleware_data.get("config")
 
     if not dialog_manager.dialog_data.get("main_channel"):
-        member = await bot.get_chat_member(config.tg_bot.channel,
-                                           callback.from_user.id)
-        if member.status == "left":
+        try:
+            member = await bot.get_chat_member(config.tg_bot.channel,
+                                               callback.from_user.id)
+            if member.status == "left":
+                return
+            else:
+                dialog_manager.dialog_data.update(main_channel=True)
+        except TelegramBadRequest as e:
             return
-        else:
-            dialog_manager.dialog_data.update(main_channel=True)
 
     unsub_channels = dialog_manager.dialog_data.get("channels")
     raffle_id = int(dialog_manager.dialog_data.get("raffle_id"))
@@ -48,9 +52,12 @@ async def check_subscribe(callback: CallbackQuery,
                                                 raffle_id)
 
     for channel in channels:
-        member = await bot.get_chat_member(channel,
-                                           callback.from_user.id)
-        if member.status == "left":
+        try:
+            member = await bot.get_chat_member(channel,
+                                               callback.from_user.id)
+            if member.status == "left":
+                return
+        except TelegramBadRequest as e:
             return
 
     if dialog_manager.dialog_data.get("ref_parent"):
