@@ -24,7 +24,7 @@ async def setup_scheduler(bot: Bot, sender_bot: Bot):
     scheduler.add_job(
         check_end_time_raffle,
         'cron',
-        minute='*',
+        minute='*/5',
         args=[bot, sender_bot]
     )
 
