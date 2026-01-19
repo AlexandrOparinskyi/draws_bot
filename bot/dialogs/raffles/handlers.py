@@ -50,7 +50,7 @@ async def raffle_enter_description(message: Message,
         )
         return
 
-    dialog_manager.dialog_data.update(description=message.text)
+    dialog_manager.dialog_data.update(description=message.html_text)
 
     await dialog_manager.switch_to(state=RaffleState.media)
 

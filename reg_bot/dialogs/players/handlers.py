@@ -1,6 +1,8 @@
+import asyncio
 import logging
 
 from aiogram import Bot
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.kbd import Button, Select
@@ -31,27 +33,43 @@ async def back_to_select_raffles(callback: CallbackQuery,
 async def check_subscribe(callback: CallbackQuery,
                           button: Button,
                           dialog_manager: DialogManager) -> None:
+    try:
+        await callback.answer("🔍 Проверяю подписки...")
+    except Exception as e:
+        logger.debug(f"Callback answer failed: {e}")
+
     bot: Bot = dialog_manager.middleware_data.get("check_bot")
     config: Config = dialog_manager.middleware_data.get("config")
 
     if not dialog_manager.dialog_data.get("main_channel"):
-        member = await bot.get_chat_member(config.tg_bot.channel,
-                                           callback.from_user.id)
-        if member.status == "left":
+        try:
+            member = await bot.get_chat_member(config.tg_bot.channel,
+                                               callback.from_user.id)
+            if member.status == "left":
+                return
+            else:
+                dialog_manager.dialog_data.update(main_channel=True)
+        except TelegramBadRequest as e:
             return
-        else:
-            dialog_manager.dialog_data.update(main_channel=True)
 
     unsub_channels = dialog_manager.dialog_data.get("channels")
     raffle_id = int(dialog_manager.dialog_data.get("raffle_id"))
     channels = await get_channels_for_subscribe(unsub_channels,
                                                 raffle_id)
 
-    for channel in channels:
-        member = await bot.get_chat_member(channel,
-                                           callback.from_user.id)
-        if member.status == "left":
-            return
+    if channels:
+        tasks = []
+        for channel in channels:
+            task = check_single_channel_safe(bot, channel, callback.from_user.id)
+            tasks.append(task)
+
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+        for result in results:
+            if isinstance(result, Exception):
+                return
+            if not result:
+                return
 
     if dialog_manager.dialog_data.get("ref_parent"):
         await create_raffle_player(
@@ -64,6 +82,26 @@ async def check_subscribe(callback: CallbackQuery,
                                    raffle_id)
 
     await dialog_manager.switch_to(state=PlayerState.raffle)
+
+
+async def check_single_channel_safe(bot: Bot, channel: int, user_id: int) -> bool:
+    """Безопасная проверка подписки на один канал с таймаутом"""
+    try:
+        # Добавляем таймаут 3 секунды
+        member = await asyncio.wait_for(
+            bot.get_chat_member(channel, user_id),
+            timeout=3.0
+        )
+        return member.status != "left"
+    except TelegramBadRequest as e:
+        # Если пользователя нет в канале или канал не найден
+        return False
+    except asyncio.TimeoutError:
+        logger.warning(f"Timeout checking channel {channel}")
+        return False
+    except Exception as e:
+        logger.error(f"Error checking channel {channel}: {e}")
+        return False
 
 
 async def player_invite(callback: CallbackQuery,

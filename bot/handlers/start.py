@@ -1,12 +1,22 @@
 from aiogram import Router
 from aiogram.filters import CommandStart
-from aiogram.types import Message
+from aiogram.types import Message, ErrorEvent
 from aiogram_dialog import DialogManager, StartMode
+from aiogram_dialog.api.exceptions import UnknownIntent
 
 from bot.states import UserState
 from bot.utils import get_user_by_id, create_user
 
 start_router = Router()
+
+
+@start_router.errors()
+async def handle_unknown_intent(event: ErrorEvent):
+    if isinstance(event.exception, UnknownIntent):
+        await event.update.callback_query.answer("Сессия устарела. Введите команду /start",
+                                                 show_alert=True)
+        return True
+
 
 
 @start_router.message(CommandStart())
