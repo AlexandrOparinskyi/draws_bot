@@ -10,7 +10,7 @@ from aiogram_dialog.widgets.kbd import Button, Select
 from bot.utils import get_raffle_by_id
 from config import Config
 from reg_bot.states import PlayerState
-from reg_bot.utils import get_channels_for_subscribe, create_raffle_player
+from reg_bot.utils import get_channels_for_subscribe, create_raffle_player, check_single_channel_safe
 
 logger = logging.getLogger(__name__)
 
@@ -82,26 +82,6 @@ async def check_subscribe(callback: CallbackQuery,
                                    raffle_id)
 
     await dialog_manager.switch_to(state=PlayerState.raffle)
-
-
-async def check_single_channel_safe(bot: Bot, channel: int, user_id: int) -> bool:
-    """Безопасная проверка подписки на один канал с таймаутом"""
-    try:
-        # Добавляем таймаут 3 секунды
-        member = await asyncio.wait_for(
-            bot.get_chat_member(channel, user_id),
-            timeout=3.0
-        )
-        return member.status != "left"
-    except TelegramBadRequest as e:
-        # Если пользователя нет в канале или канал не найден
-        return False
-    except asyncio.TimeoutError:
-        logger.warning(f"Timeout checking channel {channel}")
-        return False
-    except Exception as e:
-        logger.error(f"Error checking channel {channel}: {e}")
-        return False
 
 
 async def player_invite(callback: CallbackQuery,
