@@ -9,6 +9,7 @@ from aiogram import Bot
 from aiogram.enums import ParseMode
 from aiogram.exceptions import TelegramBadRequest
 
+from config import load_config, Config
 from database import User, Channel, Raffle
 from reg_bot.utils import get_referrals_count
 from . import make_place_to_player
@@ -107,6 +108,13 @@ async def completed_raffle_bulk(
         eligible_count=eligible_count,
         winners=winners,
         notification_stats=notification_result
+    )
+
+    # Рассылка в каналы
+    await _notify_channels_bulk_stats(
+        bot=check_bot,
+        raffle=raffle,
+        winners=winners,
     )
 
     elapsed = time.time() - start_time
@@ -547,8 +555,33 @@ async def _notify_owner_bulk_stats(
             parse_mode=ParseMode.HTML
         )
 
+
     except Exception as e:
         logger.error(f"Failed to notify owner {owner_id}: {e}")
+
+
+async def _notify_channels_bulk_stats(bot: Bot,
+                                      raffle: Raffle,
+                                      winners: List[User]):
+    config: Config = load_config()
+    try:
+        winners_text = f"🌟 Конкурс <b>{raffle.title}</b> завершен\n\n"
+        if winners:
+            winners_text += "🏆 <b>Победители:</b>\n"
+            for place, winner in enumerate(winners, 1):
+                username = _format_username(winner)
+                winners_text += f"{place}. {username}\n"
+
+        await bot.send_message(chat_id=config.tg_bot.channel,
+                               text=winners_text)
+
+        for channel in raffle.channels:
+            await bot.send_message(chat_id=channel.chat_id,
+                                   text=winners_text)
+
+
+    except Exception as e:
+        logger.error(f"Failed to notify channels: {e}")
 
 
 async def _handle_no_participants(raffle: Raffle, bot: Bot) -> None:
@@ -586,5 +619,6 @@ def _format_username(user: User) -> str:
         parts.append(user.last_name)
 
     return " ".join(parts) if parts else f"ID: {user.id}"
+
 
 completed_raffle = completed_raffle_bulk
